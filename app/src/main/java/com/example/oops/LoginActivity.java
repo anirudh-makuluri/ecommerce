@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.model.Users;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,11 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import io.paperdb.Paper;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText InputName,InputPassword;
     private Button LoginButton;
     private ProgressDialog loadingBar;
     private String parentDbname="Accounts";
+    private CheckBox chkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         InputName=(EditText)findViewById(R.id.login_user_name_input);
         InputPassword=(EditText)findViewById(R.id.login_password_input );
         loadingBar = new ProgressDialog(this);
+        chkBox=(CheckBox)findViewById(R.id.remember_me_chkb);
+        Paper.init(this);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +76,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void AllowAccessToAccount(String name, String password) {
+    private void AllowAccessToAccount(final String name,final String password) {
+        if(chkBox.isChecked())
+        {
+            Paper.book().write(Prevalent.UserNameKey,name);
+            Paper.book().write(Prevalent.UserPasswordKey,password);
+        }
         //System.out.println("In access");
         final DatabaseReference RootRef;
         RootRef= FirebaseDatabase.getInstance().getReference();

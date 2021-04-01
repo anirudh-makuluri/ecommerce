@@ -62,12 +62,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rey.material.widget.CheckBox
+        <CheckBox
             android:id="@+id/remember_me_chkb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Material.Drawable.CheckBox"
-            android:text="Remember me"
+            android:text="Stay signed in"
             android:textColor="@color/colorPrimaryDark"
             app:cbd_strokeColor="@color/colorPrimaryDark"
             android:gravity="center_vertical"
@@ -76,7 +76,7 @@
             android:layout_marginLeft="17dp"
             >
 
-        </com.rey.material.widget.CheckBox>
+        </CheckBox>
         <TextView
             android:id="@+id/forget_password_link"
             android:layout_width="wrap_content"

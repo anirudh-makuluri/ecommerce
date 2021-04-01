@@ -120,8 +120,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     {
                                         Toast.makeText(RegisterActivity.this,"Account created successfully",Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
-                                        Intent intent = new Intent(RegisterActivity.this,LoginActivity.class
-                                        );
+                                        Intent intent = new Intent(getApplicationContext(),otppage.class);
+                                        intent.putExtra("phonenumber",phone);
                                         startActivity(intent);
                                     }
                                     else

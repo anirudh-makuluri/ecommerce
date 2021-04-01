@@ -16,7 +16,7 @@
         android:layout_marginTop="250dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Enter OTP"
+        android:hint="Enter OTP which is sent to your phone number"
         android:inputType="text"
         android:textColor="@color/colorPrimaryDark"
         android:textColorHint="@color/colorPrimaryDark"

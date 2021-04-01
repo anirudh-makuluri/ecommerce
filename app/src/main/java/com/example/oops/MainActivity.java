@@ -3,13 +3,17 @@ package com.example.oops;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.oops.Prevalent.Prevalent;
+import com.example.oops.model.Users;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +26,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private final static int RC_SIGN_IN=123;
     private FirebaseAuth mAuth;
+    private ProgressDialog loadingBar;
 
     //@Override
 //    protected void onStart() {
@@ -46,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth=FirebaseAuth.getInstance();
-
+        Paper.init(this);
         createrequest();
         joinNowButton=(Button)findViewById(R.id.main_join_now_btn);
         loginButton=(Button)findViewById(R.id.main_login_btn);
         googlebutton=(Button)findViewById(R.id.google_sign_in);
+        loadingBar= new ProgressDialog(this);
         googlebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +89,65 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        String UserNameKey=Paper.book().read(Prevalent.UserNameKey);
+        String UserPasswordKey=Paper.book().read(Prevalent.UserPasswordKey);
+        if(UserNameKey!=null && UserPasswordKey !=null)
+        {
+            if(!TextUtils.isEmpty(UserNameKey) && !TextUtils.isEmpty(UserPasswordKey))
+            {
+                AllowAccess(UserNameKey,UserPasswordKey);
+                loadingBar.setTitle("Already Logged in");
+                loadingBar.setMessage("Please wait, while we are checking for creds");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+            }
+        }
+
     }
+
+    private void AllowAccess(final String name,final String password) {
+        final DatabaseReference RootRef;
+        RootRef= FirebaseDatabase.getInstance().getReference();
+        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("Accounts").child(name).exists())
+                {
+                    Users usersdata=snapshot.child("Accounts").child(name).getValue(Users.class);
+                    if(usersdata.getName().equals(name) )
+                    {
+                        if(usersdata.getPassword().equals(password))
+                        {
+                            Toast.makeText(MainActivity.this,"Getting you in",Toast.LENGTH_LONG).show();
+                            loadingBar.dismiss();
+                            Intent intent = new Intent(MainActivity.this,HomeActivity.class
+                            );
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            loadingBar.dismiss();
+                            Toast.makeText(MainActivity.this,"Wrong password",Toast.LENGTH_LONG).show();
+
+                        }
+
+                    }
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this,"No account with this phone number",Toast.LENGTH_LONG).show();
+                    loadingBar.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private  void createrequest()
     {
         // Configure Google Sign In

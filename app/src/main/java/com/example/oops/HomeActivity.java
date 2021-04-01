@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import io.paperdb.Paper;
+
 public class HomeActivity extends AppCompatActivity {
     private Button logout;
     private TextView name;
@@ -38,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                Paper.book().destroy();
                 Intent intent = new Intent(HomeActivity.this,MainActivity.class
                 );
                 startActivity(intent);
