@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">oops</string>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
+</resources>

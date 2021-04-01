@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "89535333365",
+    "project_id": "oops-ae831",
+    "storage_bucket": "oops-ae831.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89535333365:android:880b09da6afe514780d6bc",
+        "android_client_info": {
+          "package_name": "com.example.oops"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "89535333365-fv2qjj4iqoa95euksd2ti1e7508jj100.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8mQlhp3MTsAQkEOLJbESENlrQk0UdFbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "89535333365-fv2qjj4iqoa95euksd2ti1e7508jj100.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
