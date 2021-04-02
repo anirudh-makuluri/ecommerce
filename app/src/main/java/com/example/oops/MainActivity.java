@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                             );
                             startActivity(intent);
                             updateUI(user);
+
                         } else {
                             Toast.makeText(MainActivity.this, "login failed", Toast.LENGTH_SHORT).show();
                             updateUI(null);
