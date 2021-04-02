@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         LoginButton=(Button)findViewById(R.id.main_login_btn);
         InputName=(EditText)findViewById(R.id.login_user_name_input);
+        String name=InputName.getText().toString();
         InputPassword=(EditText)findViewById(R.id.login_password_input );
         loadingBar = new ProgressDialog(this);
         chkBox=(CheckBox)findViewById(R.id.remember_me_chkb);
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         });
+
 
 
     }
@@ -99,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                             loadingBar.dismiss();
                             Intent intent = new Intent(LoginActivity.this,otppage.class
                             );
+                            String phone=usersdata.getPhone();
+                            intent.putExtra("phonenumber",phone);
                             startActivity(intent);
                         }
                         else

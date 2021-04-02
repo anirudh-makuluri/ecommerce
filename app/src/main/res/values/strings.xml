@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">oops</string>
+    <string name="facebook_app_id">2867359826810328</string>
+    <string name="fb_login_protocol_scheme">fb2867359826810328</string>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 </resources>

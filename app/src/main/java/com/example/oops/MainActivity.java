@@ -1,8 +1,10 @@
 package com.example.oops;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +12,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.model.Users;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -33,14 +44,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import io.paperdb.Paper;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button joinNowButton,loginButton,googlebutton;
+    private Button joinNowButton, loginButton, googlebutton;
+    private LoginButton facebookbutton;
     private GoogleSignInClient mGoogleSignInClient;
-    private final static int RC_SIGN_IN=123;
+    private final static int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
     private ProgressDialog loadingBar;
+    private CallbackManager mCallbackManager;
+    private FirebaseAuth mFirebaseAuth;
+    private AccessTokenTracker accessTokenTracker;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private TextView textView;
 
     //@Override
 //    protected void onStart() {
@@ -57,13 +76,56 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         Paper.init(this);
         createrequest();
-        joinNowButton=(Button)findViewById(R.id.main_join_now_btn);
-        loginButton=(Button)findViewById(R.id.main_login_btn);
-        googlebutton=(Button)findViewById(R.id.google_sign_in);
-        loadingBar= new ProgressDialog(this);
+        joinNowButton = (Button) findViewById(R.id.main_join_now_btn);
+        loginButton = (Button) findViewById(R.id.main_login_btn);
+        googlebutton = (Button) findViewById(R.id.google_sign_in);
+        facebookbutton = findViewById(R.id.faceboook_sign_in);
+        facebookbutton.setReadPermissions("email","public_profile");
+        textView=findViewById(R.id.app_slogan);
+        loadingBar = new ProgressDialog(this);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        mCallbackManager = CallbackManager.Factory.create();
+        facebookbutton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    updateUI(user);
+                } else {
+                    updateUI(null);
+                }
+            }
+        };
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                if (currentAccessToken == null) {
+                    mFirebaseAuth.signOut();
+                }
+            }
+        };
+
+
         googlebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class
                 );
                 startActivity(intent);
             }
@@ -84,19 +146,17 @@ public class MainActivity extends AppCompatActivity {
         joinNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,RegisterActivity.class
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class
                 );
                 startActivity(intent);
             }
         });
 
-        String UserNameKey=Paper.book().read(Prevalent.UserNameKey);
-        String UserPasswordKey=Paper.book().read(Prevalent.UserPasswordKey);
-        if(UserNameKey!=null && UserPasswordKey !=null)
-        {
-            if(!TextUtils.isEmpty(UserNameKey) && !TextUtils.isEmpty(UserPasswordKey))
-            {
-                AllowAccess(UserNameKey,UserPasswordKey);
+        String UserNameKey = Paper.book().read(Prevalent.UserNameKey);
+        String UserPasswordKey = Paper.book().read(Prevalent.UserPasswordKey);
+        if (UserNameKey != null && UserPasswordKey != null) {
+            if (!TextUtils.isEmpty(UserNameKey) && !TextUtils.isEmpty(UserPasswordKey)) {
+                AllowAccess(UserNameKey, UserPasswordKey);
                 loadingBar.setTitle("Already Logged in");
                 loadingBar.setMessage("Please wait, while we are checking for creds");
                 loadingBar.setCanceledOnTouchOutside(false);
@@ -105,6 +165,59 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void handleFacebookToken(AccessToken accessToken) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        mFirebaseAuth.signInWithCredential(credential).
+                addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            System.out.println("Entering via fb");
+                            Toast.makeText(MainActivity.this, "entering via fb", Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class
+                            );
+                            startActivity(intent);
+                            updateUI(user);
+                        } else {
+                            Toast.makeText(MainActivity.this, "login failed", Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
+
+    }
+
+    //@Override
+    protected void OnActivityResult(int requestcode, int resultcode, @Nullable Intent data) {
+        mCallbackManager.onActivityResult(requestcode, resultcode, data);
+        super.onActivityResult(requestcode, resultcode, data);
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            textView.setText("logged in");
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class
+            );
+            startActivity(intent);
+        }
+    }
+
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    protected void onStop()
+    {
+        super.onStop();
+        if(authStateListener!=null)
+        {
+            mFirebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
 
     private void AllowAccess(final String name,final String password) {
         final DatabaseReference RootRef;
@@ -205,4 +318,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 }

@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
 
         GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
         if(googleSignInAccount!=null){
-            name.setText(googleSignInAccount.getDisplayName());
+            name.setText("hello "+googleSignInAccount.getDisplayName()+"!!!!");
         }
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
