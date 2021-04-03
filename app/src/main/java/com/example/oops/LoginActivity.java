@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                             );
                             String phone=usersdata.getPhone();
                             intent.putExtra("phonenumber",phone);
+                            intent.putExtra("name",name);
                             startActivity(intent);
                         }
                         else

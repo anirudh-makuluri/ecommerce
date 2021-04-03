@@ -30,7 +30,6 @@
         android:hint="Username(atleast 6 characters)"
         android:inputType="text"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
         android:textSize="17sp"
         android:textStyle="bold">
 
@@ -48,7 +47,6 @@
         android:hint="Phone number"
         android:inputType="number"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
         android:textSize="17sp"
         android:textStyle="bold">
 
@@ -67,7 +65,6 @@
         android:hint="Password(atleast 6 characters)"
         android:inputType="textPassword"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
         android:textSize="17sp"
         android:textStyle="bold">
     </EditText>
@@ -84,27 +81,37 @@
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
         android:textSize="17sp"
         android:textStyle="bold">
     </EditText>
-    <EditText
+<!--    <EditText-->
+<!--        android:id="@+id/register_type_user_input"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/register_confirm_password_input"-->
+<!--        android:background="@drawable/input_design"-->
+<!--        android:layout_marginTop="6dp"-->
+<!--        android:padding="20dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginRight="15dp"-->
+<!--        android:hint="Type of user-customer,retailer,wholesaler"-->
+<!--        android:inputType="text"-->
+<!--        android:textColor="@color/colorPrimaryDark"-->
+<!--        android:textColorHint="@color/colorPrimaryDark"-->
+<!--        android:textSize="17sp"-->
+<!--        android:textStyle="bold">-->
+<!--    </EditText>-->
+    <Spinner
         android:id="@+id/register_type_user_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/register_confirm_password_input"
-        android:background="@drawable/input_design"
-        android:layout_marginTop="6dp"
-        android:padding="20dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/register_confirm_password_input"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="6dp"
         android:layout_marginRight="15dp"
-        android:hint="Type of user-customer,retailer,wholesaler"
-        android:inputType="text"
-        android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="17sp"
-        android:textStyle="bold">
-    </EditText>
+        android:background="@drawable/input_design"
+        android:entries="@array/country_arrays"
+        android:prompt="@string/country_prompt" />
 
 
     <Button

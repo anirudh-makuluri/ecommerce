@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background_png"
+    tools:context=".wholesaler.WholesalerHomeActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wholesaler"
+        android:layout_marginTop="50dp"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        >
+        <Button
+            android:id="@+id/vegetables_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegetables"
+            android:background="@drawable/buttons"
+            />
+        <Button
+            android:id="@+id/fruits_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fruits"
+            android:background="@drawable/buttons"
+            />
+        <Button
+            android:id="@+id/dairy_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dairy products"
+            android:background="@drawable/buttons"
+            />
+        <Button
+            android:id="@+id/readymade_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Readymade products"
+            android:background="@drawable/buttons"
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

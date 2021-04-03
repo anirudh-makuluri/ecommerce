@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".retailer.RetailerAddCategory">
+
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/select_product_image"
+        />
+    <EditText
+        android:id="@+id/product_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/product_image"
+        android:hint="Product name"
+        android:textAlignment="center"
+        android:inputType="textMultiLine"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/input_design"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorPrimary"
+        />
+    <EditText
+        android:id="@+id/product_desc"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/product_name"
+        android:hint="Product description"
+        android:textAlignment="center"
+        android:inputType="textMultiLine"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/input_design"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/colorPrimary"
+        />
+
+    <EditText
+        android:id="@+id/product_price"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/product_desc"
+        android:hint="Product price"
+        android:textAlignment="center"
+        android:inputType="number"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/input_design"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/colorPrimary"
+        />
+
+    <Button
+        android:id="@+id/add_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/product_price"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="6dp"
+        android:text="Add Product"
+        android:background="@drawable/buttons"/>
+
+
+</RelativeLayout>

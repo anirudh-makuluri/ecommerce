@@ -27,7 +27,8 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton;
-    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,TypeUser;
+    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword;
+    private Spinner TypeUser;
     private ProgressDialog loadingBar;
 
 
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         InputPhoneNumber=(EditText)findViewById(R.id.register_phone_number_input);
         InputPassword=(EditText)findViewById(R.id.register_password_input);
         InputConfirmPassword=(EditText)findViewById(R.id.register_confirm_password_input);
-        TypeUser=(EditText)findViewById(R.id.register_type_user_input);
+        TypeUser=findViewById(R.id.register_type_user_input);
         loadingBar = new ProgressDialog(this);
 
         CreateAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -54,11 +55,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void CreateAccount() {
+        TypeUser.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+
         String name= InputName.getText().toString();
         String phone= InputPhoneNumber.getText().toString();
         String password=InputPassword.getText().toString();
         String confirmpassword=InputConfirmPassword.getText().toString();
-        String typeuser=TypeUser.getText().toString();
+        String typeuser=String.valueOf(TypeUser.getSelectedItem());
 
         if(TextUtils.isEmpty(name) || name.length()<6)
         {
@@ -76,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Toast.makeText(this,"Ensure that you have confirmed the password properly",Toast.LENGTH_SHORT).show();
         }
-        else if(TextUtils.isEmpty(typeuser))
+        else if(TextUtils.isEmpty(typeuser)|| typeuser.equals("Choose the type of user"))
         {
             Toast.makeText(this,"Enter a valid type of user",Toast.LENGTH_SHORT).show();
         }
@@ -120,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     {
                                         Toast.makeText(RegisterActivity.this,"Account created successfully",Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
-                                        Intent intent = new Intent(getApplicationContext(),otppage.class);
+                                        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                                         intent.putExtra("phonenumber",phone);
                                         startActivity(intent);
                                     }

@@ -190,15 +190,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //@Override
-    protected void OnActivityResult(int requestcode, int resultcode, @Nullable Intent data) {
-        mCallbackManager.onActivityResult(requestcode, resultcode, data);
-        super.onActivityResult(requestcode, resultcode, data);
-    }
+
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            textView.setText("logged in");
             Intent intent = new Intent(MainActivity.this, HomeActivity.class
             );
             startActivity(intent);
@@ -280,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {

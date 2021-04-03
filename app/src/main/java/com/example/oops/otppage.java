@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.oops.customer.CustomerHomeActivity;
+import com.example.oops.model.Users;
+import com.example.oops.retailer.RetailerHomeActivity;
+import com.example.oops.wholesaler.WholesalerHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -20,6 +24,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +44,7 @@ public class otppage extends AppCompatActivity {
         EditText otpinput=findViewById(R.id.otp_input);
         Button login=findViewById(R.id.otp_login_btn);
         String phonenumber=getIntent().getStringExtra("phonenumber");
+        String name=getIntent().getStringExtra("name");
         sendVerificationToUser(phonenumber);
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +57,7 @@ public class otppage extends AppCompatActivity {
                     otpinput.requestFocus();
                     return;
                 }
+
                 verifyCode(code);
             }
         });
@@ -103,12 +114,53 @@ public class otppage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
-                            {
-                                Intent intent = new Intent(getApplicationContext(),HomeActivity.class
-                                );
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                Toast.makeText(otppage.this, "entering", Toast.LENGTH_SHORT).show();
+                            {   String name=getIntent().getStringExtra("name");
+                                DatabaseReference RootRef;
+                                RootRef= FirebaseDatabase.getInstance().getReference();
+                                RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Users usersdata=snapshot.child("Accounts").child(name).getValue(Users.class);
+                                        String typeuser=usersdata.getType();
+                                        String nextLoc;
+                                        if(typeuser.equals("Wholesaler"))
+                                        {
+                                            Intent intent = new Intent(getApplicationContext(), WholesalerHomeActivity.class
+                                            );
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                                        }
+                                        else if(typeuser.equals("Customer"))
+                                        {
+                                            Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class
+                                            );
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                                        }
+                                        else if(typeuser.equals("Retailer"))
+                                        {
+                                            Intent intent = new Intent(getApplicationContext(), RetailerHomeActivity.class
+                                            );
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(otppage.this, "some error occured", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+
 
                             }
                             else
