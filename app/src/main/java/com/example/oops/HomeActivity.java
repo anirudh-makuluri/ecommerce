@@ -11,8 +11,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.oops.customer.CustomerHomeActivity;
-import com.example.oops.model.Users;
 import com.example.oops.retailer.RetailerHomeActivity;
 import com.example.oops.wholesaler.WholesalerHomeActivity;
 import com.facebook.AccessToken;

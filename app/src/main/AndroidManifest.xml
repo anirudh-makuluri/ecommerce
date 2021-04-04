@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.oops">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,7 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops">
-        <activity android:name=".retailer.RetailerAddCategory"></activity>
+        <activity
+            android:name=".customer.CustomerHomeActivity"
+            android:label="@string/title_activity_customer_home"
+            android:theme="@style/Theme.Oops.NoActionBar"></activity>
+        <activity android:name=".retailer.RetailerAddCategory" />
         <activity android:name=".wholesaler.subcats.WholesalerReadymade" />
         <activity android:name=".wholesaler.subcats.WholesalerDairy" />
         <activity android:name=".wholesaler.subcats.WholesalerFruits" />
@@ -19,7 +24,6 @@
         <activity android:name=".wholesaler.WholesalerSubActivity" />
         <activity android:name=".retailer.RetailerHomeActivity" />
         <activity android:name=".wholesaler.WholesalerHomeActivity" />
-        <activity android:name=".customer.CustomerHomeActivity" />
         <activity android:name=".april" />
         <activity android:name=".otppage" />
         <activity android:name=".HomeActivity" />
