@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Users;
 import com.example.oops.retailer.RetailerHomeActivity;
 import com.example.oops.wholesaler.WholesalerHomeActivity;
