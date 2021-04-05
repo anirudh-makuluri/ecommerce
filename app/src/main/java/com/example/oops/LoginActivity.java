@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
+import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Users;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -99,9 +100,10 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             Toast.makeText(LoginActivity.this,"Getting you in",Toast.LENGTH_LONG).show();
                             loadingBar.dismiss();
-                            Intent intent = new Intent(LoginActivity.this,otppage.class
+                            Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class
                             );
                             String phone=usersdata.getPhone();
+                            Prevalent.currentonlineUser=usersdata;
                             intent.putExtra("phonenumber",phone);
                             intent.putExtra("name",name);
                             startActivity(intent);
