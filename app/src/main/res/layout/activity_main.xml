@@ -45,7 +45,7 @@
         android:textSize="20sp"
         android:visibility="invisible" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/google_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,13 +53,14 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/buttons"
         android:padding="20dp"
         android:text="Sign in with google"
+        android:textColor="@color/white"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_login_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,7 +76,7 @@
         android:textColor="@color/white"
         android:textSize="20sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_join_now_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +84,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/input_design"
+        android:background="@drawable/buttons"
         android:padding="20dp"
         android:text="Register"
         android:textAllCaps="false"

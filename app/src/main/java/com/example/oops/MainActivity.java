@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
+import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Users;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -230,8 +231,9 @@ public class MainActivity extends AppCompatActivity {
                         {
                             Toast.makeText(MainActivity.this,"Getting you in",Toast.LENGTH_LONG).show();
                             loadingBar.dismiss();
-                            Intent intent = new Intent(MainActivity.this,HomeActivity.class
+                            Intent intent = new Intent(MainActivity.this, CustomerHomeActivity.class
                             );
+                            Prevalent.currentonlineUser=usersdata;
                             startActivity(intent);
                         }
                         else

@@ -12,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops">
+        <activity android:name=".customer.Settings"></activity>
         <activity
             android:name=".customer.CustomerHomeActivity"
             android:label="@string/title_activity_customer_home"
-            android:theme="@style/Theme.Oops.NoActionBar"></activity>
+            android:theme="@style/Theme.Oops.NoActionBar" />
         <activity android:name=".retailer.RetailerAddCategory" />
         <activity android:name=".wholesaler.subcats.WholesalerReadymade" />
         <activity android:name=".wholesaler.subcats.WholesalerDairy" />

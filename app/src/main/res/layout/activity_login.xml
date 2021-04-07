@@ -92,7 +92,7 @@
 
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_login_btn"
         android:layout_below="@id/linear_layout_1"
         android:layout_marginTop="10dp"
