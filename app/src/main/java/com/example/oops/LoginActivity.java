@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             Toast.makeText(LoginActivity.this,"Getting you in",Toast.LENGTH_LONG).show();
                             loadingBar.dismiss();
-                            Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class
+                            Intent intent = new Intent(LoginActivity.this, otppage.class
                             );
                             String phone=usersdata.getPhone();
                             Prevalent.currentonlineUser=usersdata;

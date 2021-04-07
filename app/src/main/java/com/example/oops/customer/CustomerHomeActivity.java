@@ -108,7 +108,7 @@ public class CustomerHomeActivity extends AppCompatActivity
                              protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder, int i, @NonNull Products products) {
                                  productViewHolder.txtproductname.setText(products.getPname());
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
-                                 productViewHolder.txtproductprice.setText("$"+products.getPrice());
+                                 productViewHolder.txtproductprice.setText("₹"+products.getPrice());
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
 
                              }
