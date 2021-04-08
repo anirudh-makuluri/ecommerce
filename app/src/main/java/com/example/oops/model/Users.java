@@ -2,7 +2,7 @@ package com.example.oops.model;
 
 public class Users {
 
-    private String name,password,phone,type,Image;
+    private String name,password,phone,type,Image,address,location;
     public Users()
     {
 
@@ -14,6 +14,24 @@ public class Users {
         this.phone = phone;
         this.type=type;
         this.Image=Image;
+        this.address=address;
+        this.location=location;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getImage() {

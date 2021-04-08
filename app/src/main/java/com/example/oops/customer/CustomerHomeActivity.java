@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
+import com.example.oops.ProductDetailsActivity;
 import com.example.oops.R;
 import com.example.oops.RegisterActivity;
 import com.example.oops.customer.ViewHolder.ProductViewHolder;
 import com.example.oops.model.Products;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -84,7 +87,14 @@ public class CustomerHomeActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+        if(Prevalent.currentonlineUser.getName()!=null)
         userNameTextView.setText(Prevalent.currentonlineUser.getName());
+        else
+        {
+            GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
+            userNameTextView.setText(googleSignInAccount.getDisplayName());
+        }
+
         Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
 
         recyclerView = findViewById(R.id.recycler_menu);
@@ -110,6 +120,14 @@ public class CustomerHomeActivity extends AppCompatActivity
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
                                  productViewHolder.txtproductprice.setText("₹"+products.getPrice());
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
+                                 productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                         intent.putExtra("pid",products.getPid());
+                                         startActivity(intent);
+                                     }
+                                 });
 
                              }
 

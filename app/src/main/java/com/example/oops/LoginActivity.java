@@ -3,6 +3,7 @@ package com.example.oops;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Users;
+import com.example.oops.retailer.RetailerHomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //overridePendingTransition(R.anim.fadein,R.anim.fadeout);
         setContentView(R.layout.activity_login);
         LoginButton=(Button)findViewById(R.id.main_login_btn);
         InputName=(EditText)findViewById(R.id.login_user_name_input);
@@ -119,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this,"No account with this phone number",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,"No account with this username",Toast.LENGTH_LONG).show();
                     loadingBar.dismiss();
                 }
             }

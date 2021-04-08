@@ -3,8 +3,14 @@ package com.example.oops;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
@@ -15,7 +21,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,11 +34,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import static android.os.Build.VERSION_CODES.M;
+
 public class RegisterActivity extends AppCompatActivity {
-    private Button CreateAccountButton;
-    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword;
+    private Button CreateAccountButton,LocationButton;
+    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,LocationText;
     private Spinner TypeUser;
     private ProgressDialog loadingBar;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationManager locationManager;
 
 
     @Override
@@ -43,6 +56,48 @@ public class RegisterActivity extends AppCompatActivity {
         InputConfirmPassword=(EditText)findViewById(R.id.register_confirm_password_input);
         TypeUser=findViewById(R.id.register_type_user_input);
         loadingBar = new ProgressDialog(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        LocationText=findViewById(R.id.register_location_text);
+        LocationButton=findViewById(R.id.register_location_btn);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        LocationButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                System.out.println("Btn pressed");
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
+                { System.out.println("In build");
+                    if(getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+                    {
+                        fusedLocationClient.getLastLocation()
+                                .addOnSuccessListener(new OnSuccessListener<Location>(){
+                                    @Override
+                                    public void onSuccess(Location location)
+                                    {
+                                        if(location!=null)
+                                        {
+                                            Double lat=location.getLatitude();
+                                            Double lon=location.getLongitude();
+                                            LocationText.setText(lat+ " " + lon);
+                                            Toast.makeText(RegisterActivity.this, "worked", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(RegisterActivity.this, "try again", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+
+                    }
+                    else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
+                    }
+                }
+            }
+        });
 
         CreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void CreateAccount() {
         TypeUser.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 
+        String location=LocationText.getText().toString();
         String name= InputName.getText().toString();
         String phone= InputPhoneNumber.getText().toString();
         String password=InputPassword.getText().toString();
@@ -83,6 +139,10 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Toast.makeText(this,"Enter a valid type of user",Toast.LENGTH_SHORT).show();
         }
+        else if(TextUtils.isEmpty(location)|| typeuser.equals("Choose the type of user"))
+        {
+            Toast.makeText(this,"Enter location",Toast.LENGTH_SHORT).show();
+        }
 
         else
         {
@@ -93,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
                 loadingBar.setCanceledOnTouchOutside(false);
                 loadingBar.show();
 
-                ValidatePhoneNumber(name,phone,password,typeuser);
+                ValidatePhoneNumber(name,phone,password,typeuser,location);
             }
             else
             {
@@ -102,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser) {
+    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser,String location) {
         final DatabaseReference RootRef;
         RootRef= FirebaseDatabase.getInstance().getReference();
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -115,6 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userdatamap.put("password",password);
                     userdatamap.put("name",name);
                     userdatamap.put("type",typeuser);
+                    userdatamap.put("address",location);
                     RootRef.child("Accounts").child(name).updateChildren(userdatamap).
                             addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

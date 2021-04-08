@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".retailer.RetailerHomeActivity">
 
     <TextView
@@ -30,7 +31,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/shoess"
+            android:src="@drawable/veg"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -38,7 +39,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/tshirts"
+            android:src="@drawable/fruit"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -46,7 +47,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/tshirts"
+            android:src="@drawable/dairy"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -54,7 +55,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/shoess"
+            android:src="@drawable/readymade"
             android:layout_marginTop="25dp"
             />
 
@@ -73,7 +74,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/shoess"
+            android:src="@drawable/milk"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -81,7 +82,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/tshirts"
+            android:src="@drawable/bewarages"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -89,7 +90,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/tshirts"
+            android:src="@drawable/cornflakes"
             android:layout_marginTop="25dp"
             />
         <ImageView
@@ -97,7 +98,7 @@
             android:layout_marginRight="20dp"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/shoess"
+            android:src="@drawable/foodgrams"
             android:layout_marginTop="25dp"
             />
 
