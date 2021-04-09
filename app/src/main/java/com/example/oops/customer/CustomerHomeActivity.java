@@ -69,8 +69,8 @@ public class CustomerHomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(),CartActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -87,13 +87,9 @@ public class CustomerHomeActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
-        if(Prevalent.currentonlineUser.getName()!=null)
+
         userNameTextView.setText(Prevalent.currentonlineUser.getName());
-        else
-        {
-            GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
-            userNameTextView.setText(googleSignInAccount.getDisplayName());
-        }
+
 
         Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
 
@@ -118,7 +114,7 @@ public class CustomerHomeActivity extends AppCompatActivity
                              protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder, int i, @NonNull Products products) {
                                  productViewHolder.txtproductname.setText(products.getPname());
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
-                                 productViewHolder.txtproductprice.setText("₹"+products.getPrice());
+                                 productViewHolder.txtproductprice.setText(products.getPrice());
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
                                  productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                      @Override
@@ -178,7 +174,8 @@ public class CustomerHomeActivity extends AppCompatActivity
 
                  if (id == R.id.nav_cart)
                  {
-
+                     Intent intent = new Intent(getApplicationContext(),CartActivity.class);
+                     startActivity(intent);
                  }
                  else if (id == R.id.nav_order)
                  {

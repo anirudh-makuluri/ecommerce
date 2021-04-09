@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //overridePendingTransition(R.anim.fadein,R.anim.fadeout);
+       // overridePendingTransition(R.anim.fadein,R.anim.fadeout);
         setContentView(R.layout.activity_login);
         LoginButton=(Button)findViewById(R.id.main_login_btn);
         InputName=(EditText)findViewById(R.id.login_user_name_input);

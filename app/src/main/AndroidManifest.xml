@@ -9,14 +9,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        tools:replace="android:theme"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Oops">
-        <activity android:name=".ProductDetailsActivity"></activity>
+        android:theme="@style/Theme.Oops"
+        tools:replace="android:theme">
+        <activity android:name=".retailer.RetailerNewOrderActivity"></activity>
+        <activity android:name=".customer.ConfirmFinalOrderActivity" />
+        <activity android:name=".customer.CartActivity" />
+        <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".customer.Settings" />
         <activity
             android:name=".customer.CustomerHomeActivity"
