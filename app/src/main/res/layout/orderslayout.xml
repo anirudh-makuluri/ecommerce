@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/order_date_time"
-            android:background="@color/white"
+            android:background="@color/black"
             android:textColor="@color/white"
             android:text="Show this order products"
             android:layout_margin="10dp"

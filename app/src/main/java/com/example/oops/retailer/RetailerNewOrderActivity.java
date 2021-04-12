@@ -1,16 +1,20 @@
 package com.example.oops.retailer;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.oops.R;
 import com.example.oops.model.RetailerOrders;
@@ -48,13 +52,48 @@ public class RetailerNewOrderActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<RetailerOrders,RetailerViewHolder> adapter=
                 new FirebaseRecyclerAdapter<RetailerOrders, RetailerViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull RetailerViewHolder retailerViewHolder, int i, @NonNull RetailerOrders retailerOrders) {
+                    protected void onBindViewHolder(@NonNull RetailerViewHolder retailerViewHolder,final int i, @NonNull RetailerOrders retailerOrders) {
                         retailerViewHolder.username.setText("name:"+retailerOrders.getName());
                         retailerViewHolder.userphone.setText("phone:"+retailerOrders.getPhone());
                         retailerViewHolder.usertotalprice.setText("total amount:"+retailerOrders.getTotalAmount());
                         retailerViewHolder.userdatetime.setText("date:"+retailerOrders.getDate());
                         retailerViewHolder.usershippingaddress.setText("address:"+retailerOrders.getAddress()+" "+retailerOrders.getCity());
-
+                        retailerViewHolder.ShowOrdersBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String uID=getRef(i).getKey();
+                                Intent intent = new Intent(getApplicationContext(),RetailerCustomerActivity.class);
+                                intent.putExtra("uid",uID);
+                                startActivity(intent);
+                            }
+                        });
+                        retailerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CharSequence options[]= new CharSequence[]
+                                        {
+                                                "Yes",
+                                                "No"
+                                        };
+                                AlertDialog.Builder builder= new AlertDialog.Builder(RetailerNewOrderActivity.this);
+                                builder.setTitle("Have you shipped this order?");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(which==0)
+                                        {
+                                            String uID=getRef(i).getKey();
+                                            RemoveOrder(uID);
+                                        }
+                                        else
+                                        {
+                                            finish();
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
                     }
 
                     @NonNull
@@ -66,6 +105,10 @@ public class RetailerNewOrderActivity extends AppCompatActivity {
                 };
         ordersList.setAdapter(adapter);
         adapter.startListening();
+    }
+
+    private void RemoveOrder(String uID) {
+        ordersRef.child(uID).removeValue();
     }
 
     public static class RetailerViewHolder extends RecyclerView.ViewHolder
@@ -85,4 +128,6 @@ public class RetailerNewOrderActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
