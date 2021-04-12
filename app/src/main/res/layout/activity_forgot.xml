@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background_png"
+    tools:context=".ForgotActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/forgot_input"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/input_design"
+        android:textColor="@color/white"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgot_submit"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:text="Enter OTP"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/forgot_input"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/forgot_password_input"
+        android:layout_below="@id/forgot_submit"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/input_design"
+        android:visibility="invisible"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/forgot_confirm_password_input"
+        android:layout_below="@id/forgot_password_input"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/input_design"
+        android:visibility="invisible"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgot_confirmed"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:text="Submit"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/forgot_confirm_password_input"
+        android:visibility="invisible"
+        />
+
+
+</RelativeLayout>

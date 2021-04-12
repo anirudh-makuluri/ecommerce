@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
@@ -28,8 +30,9 @@ import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText InputName,InputPassword;
-    private Button LoginButton;
+    private Button LoginButton,ForgotButton;
     private ProgressDialog loadingBar;
+    private TextView forgotpass;
     private String parentDbname="Accounts";
     private CheckBox chkBox;
 
@@ -39,9 +42,10 @@ public class LoginActivity extends AppCompatActivity {
        // overridePendingTransition(R.anim.fadein,R.anim.fadeout);
         setContentView(R.layout.activity_login);
         LoginButton=(Button)findViewById(R.id.main_login_btn);
+        ForgotButton=findViewById(R.id.forgot_login_btn);
+        forgotpass=findViewById(R.id.forget_password_link);
         InputName=(EditText)findViewById(R.id.login_user_name_input);
-        String name=InputName.getText().toString();
-        InputPassword=(EditText)findViewById(R.id.login_password_input );
+        InputPassword=(EditText)findViewById(R.id.login_password_input);
         loadingBar = new ProgressDialog(this);
         chkBox=(CheckBox)findViewById(R.id.remember_me_chkb);
         Paper.init(this);
@@ -51,9 +55,36 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LoginUser();
             }
-
-
         });
+        forgotpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputPassword.setHint("Phone number");
+                InputPassword.setInputType(InputType.TYPE_CLASS_PHONE);
+                String name=InputName.getText().toString();
+                LoginButton.setVisibility(View.INVISIBLE);
+                ForgotButton.setVisibility(View.VISIBLE);
+            }
+        });
+        ForgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone=InputPassword.getText().toString();
+                String name=InputName.getText().toString();
+                if(TextUtils.isEmpty(name))
+                    Toast.makeText(LoginActivity.this, "enter name", Toast.LENGTH_SHORT).show();
+                else if(TextUtils.isEmpty(phone))
+                    Toast.makeText(LoginActivity.this, "enter phone", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Intent intent= new Intent(getApplicationContext(),ForgotActivity.class);
+                    intent.putExtra("name",name);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+                }
+            }
+        });
+
 
 
 
@@ -103,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             Toast.makeText(LoginActivity.this,"Getting you in",Toast.LENGTH_LONG).show();
                             loadingBar.dismiss();
-                            Intent intent = new Intent(LoginActivity.this, CustomerHomeActivity.class
+                            Intent intent = new Intent(LoginActivity.this, otppage.class
                             );
                             String phone=usersdata.getPhone();
                             Prevalent.currentonlineUser=usersdata;

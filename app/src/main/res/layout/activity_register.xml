@@ -118,9 +118,9 @@
             android:background="@drawable/input_design"
             android:textColor="@color/white"
             android:hint="Enter location"
+            android:paddingLeft="20dp"
             android:textColorHint="@color/white"
-            android:layout_marginRight="5dp"
-            android:padding="20dp"
+            android:visibility="invisible"
             android:textStyle="bold"
             />
         <androidx.appcompat.widget.AppCompatButton

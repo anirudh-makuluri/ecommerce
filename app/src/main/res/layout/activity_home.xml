@@ -4,20 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/login_background_png"
     tools:context=".HomeActivity">
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="logout"
-        android:layout_below="@+id/name"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         />
     <TextView
         android:id="@+id/name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp" />
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:text="Name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -26,6 +32,8 @@
 
         <Spinner
             android:id="@+id/spinner1"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/country_arrays"
@@ -34,7 +42,11 @@
             />
         <Button
             android:id="@+id/btnSubmit"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="30dp"
+            android:textAlignment="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit" />
 

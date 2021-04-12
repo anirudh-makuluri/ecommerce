@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops"
         tools:replace="android:theme">
-        <activity android:name=".retailer.RetailerCustomerActivity"></activity>
+        <activity android:name=".ForgotActivity"></activity>
+        <activity android:name=".retailer.RetailerCustomerActivity" />
         <activity android:name=".retailer.RetailerNewOrderActivity" />
         <activity android:name=".customer.ConfirmFinalOrderActivity" />
         <activity android:name=".customer.CartActivity" />
