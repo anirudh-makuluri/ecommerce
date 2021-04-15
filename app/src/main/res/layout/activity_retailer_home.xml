@@ -107,6 +107,18 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/maintain_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/retailer_logout"
+        android:layout_margin="20dp"
+        android:text="Maintain products"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        />
+
+    <Button
         android:id="@+id/check_order_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

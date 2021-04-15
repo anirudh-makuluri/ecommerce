@@ -129,7 +129,7 @@ public class Settings extends AppCompatActivity {
 
     private void userInfoDisplay(final CircleImageView profileImageView, final EditText userPhoneEditText, final EditText addressEditText)
     {
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Accounts").child(Prevalent.currentonlineUser.getPhone());
+        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Accounts").child(Prevalent.currentonlineUser.getName());
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override

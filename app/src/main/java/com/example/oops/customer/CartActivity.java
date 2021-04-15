@@ -76,6 +76,7 @@ public class CartActivity extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<Cart>()
                 .setQuery(cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products"),Cart.class)
                         .build();
+
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
                 = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override

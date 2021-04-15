@@ -177,9 +177,10 @@ public class CustomerHomeActivity extends AppCompatActivity
                      Intent intent = new Intent(getApplicationContext(),CartActivity.class);
                      startActivity(intent);
                  }
-                 else if (id == R.id.nav_order)
+                 else if (id == R.id.nav_search)
                  {
-
+                     Intent intent = new Intent(getApplicationContext(),SearchProductsActivity.class);
+                     startActivity(intent);
                  }
                  else if (id == R.id.nav_categories)
                  {

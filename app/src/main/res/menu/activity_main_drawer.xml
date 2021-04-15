@@ -10,20 +10,29 @@
             android:iconTint="@color/white"
             android:title="Cart" />
         <item
-            android:id="@+id/nav_order"
+            android:id="@+id/nav_search"
+            android:icon="@drawable/search"
+            android:title="Search" />
+        <item
+            android:id="@+id/nav_orders"
             android:icon="@drawable/orders"
             android:title="Orders" />
+
         <item
             android:id="@+id/nav_categories"
             android:icon="@drawable/category"
             android:title="Category" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/settings"
             android:title="Settings" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/feedback"
+            android:title="Feedback" />
     </group>
 </menu>

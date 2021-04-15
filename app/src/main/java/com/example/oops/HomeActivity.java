@@ -11,7 +11,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.customer.CustomerHomeActivity;
+import com.example.oops.model.Users;
 import com.example.oops.retailer.RetailerHomeActivity;
 import com.example.oops.wholesaler.WholesalerHomeActivity;
 import com.facebook.AccessToken;
@@ -57,6 +59,10 @@ public class HomeActivity extends AppCompatActivity {
         GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
         if(googleSignInAccount!=null){
             Displayname.setText("hello "+googleSignInAccount.getDisplayName()+". Select the type of user below");
+            Users usersdata= new Users();
+            usersdata.setName(googleSignInAccount.getDisplayName());
+            Prevalent.currentonlineUser=usersdata;
+
 
 
         }

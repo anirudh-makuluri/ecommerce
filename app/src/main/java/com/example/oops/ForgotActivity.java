@@ -136,35 +136,36 @@ public class ForgotActivity extends AppCompatActivity {
     private void ConfirmPassword() {
         EditText otpinput=findViewById(R.id.forgot_input);
         Button login=findViewById(R.id.forgot_submit);
-        EditText password=findViewById(R.id.forgot_password_input);
-        EditText confirmpasswword=findViewById(R.id.forgot_confirm_password_input);
+        EditText passwordedittext=findViewById(R.id.forgot_password_input);
+        EditText confirmpasswwordedittext=findViewById(R.id.forgot_confirm_password_input);
         Button confirm=findViewById(R.id.forgot_confirmed);
         otpinput.setVisibility(View.INVISIBLE);
         login.setVisibility(View.INVISIBLE);
-        password.setVisibility(View.VISIBLE);
+        passwordedittext.setVisibility(View.VISIBLE);
         confirm.setVisibility(View.VISIBLE);
-        confirmpasswword.setVisibility(View.VISIBLE);
-        String password1=password.getText().toString();
-        String confirmpassword1=confirmpasswword.getText().toString();
+        confirmpasswwordedittext.setVisibility(View.VISIBLE);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(password1) || password.length()<6)
+                String password=passwordedittext.getText().toString();
+                String confirmpassword=confirmpasswwordedittext.getText().toString();
+                Toast.makeText(ForgotActivity.this, "password is "+password , Toast.LENGTH_LONG).show();
+                if(TextUtils.isEmpty(password))
                 {
                     Toast.makeText(ForgotActivity.this, "enter password", Toast.LENGTH_SHORT).show();
                 }
-                else  if(TextUtils.isEmpty(confirmpassword1)|| confirmpassword1.length()<6)
+                else  if(TextUtils.isEmpty(confirmpassword))
                 {
                     Toast.makeText(ForgotActivity.this, "confirm password", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    if(confirmpassword1.equals(password))
+                    if(confirmpassword.equals(password))
                     {
                         String name=getIntent().getStringExtra("name");
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Accounts");
                         HashMap<String, Object> userMap = new HashMap<>();
-                        userMap. put("password", password1);
+                        userMap. put("password", password);
                         ref.child(name).updateChildren(userMap);
                         Toast.makeText(ForgotActivity.this, "Password updated successfully.", Toast.LENGTH_SHORT).show();
                         Intent intent= new Intent(getApplicationContext(),LoginActivity.class);

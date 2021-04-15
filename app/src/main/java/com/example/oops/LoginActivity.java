@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent= new Intent(getApplicationContext(),ForgotActivity.class);
                     intent.putExtra("name",name);
                     intent.putExtra("phone",phone);
+                    intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }

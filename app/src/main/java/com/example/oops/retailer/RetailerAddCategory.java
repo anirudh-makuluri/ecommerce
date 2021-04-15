@@ -79,7 +79,7 @@ public class RetailerAddCategory extends AppCompatActivity {
     private void ValidateProductData() {
         Desc=Productdesc.getText().toString();
         price=Productprice.getText().toString();
-        pname=Productname.getText().toString();
+        pname=Productname.getText().toString().toLowerCase();
 
         if(ImageUri==null)
         {
