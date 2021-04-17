@@ -10,14 +10,14 @@
 
     <application
         android:allowBackup="true"
-
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops"
         tools:replace="android:theme">
-        <activity android:name=".customer.SearchProductsActivity"></activity>
+        <activity android:name=".retailer.RetailerMaintainActivity"></activity>
+        <activity android:name=".customer.SearchProductsActivity" />
         <activity android:name=".ForgotActivity" />
         <activity android:name=".retailer.RetailerCustomerActivity" />
         <activity android:name=".retailer.RetailerNewOrderActivity" />
@@ -55,8 +55,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
-        tools:replace="android:icon"
     </application>
 
 </manifest>

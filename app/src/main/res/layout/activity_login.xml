@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:src="@drawable/vamsigro"
+        android:src="@drawable/final_logo"
         android:id="@+id/login_applogo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="180dp">

@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -32,13 +34,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import static android.os.Build.VERSION_CODES.M;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton,LocationButton;
-    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,LocationText;
+    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,LocationText,CityText;
     private Spinner TypeUser;
     private ProgressDialog loadingBar;
     private FusedLocationProviderClient fusedLocationClient;
@@ -58,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         LocationText=findViewById(R.id.register_location_text);
+        CityText=findViewById(R.id.register_city_text);
         LocationButton=findViewById(R.id.register_location_btn);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -79,12 +85,27 @@ public class RegisterActivity extends AppCompatActivity {
                                         {
                                             Double lat=location.getLatitude();
                                             Double lon=location.getLongitude();
-                                            LocationText.setText(lat+ " " + lon);
-                                            Toast.makeText(RegisterActivity.this, "worked", Toast.LENGTH_SHORT).show();
+                                            try {
+                                                GetLocation(lat,lon);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+//                                            LocationText.setText(lat+ " " + lon);
+                                            //Toast.makeText(RegisterActivity.this, "worked", Toast.LENGTH_SHORT).show();
                                         }
                                         else
-                                        {
-                                            Toast.makeText(RegisterActivity.this, "try again", Toast.LENGTH_SHORT).show();
+                                        {   Double lat=17.5449;
+                                            Double lon=78.5718;
+                                           // Toast.makeText(RegisterActivity.this, lat+" "+lon, Toast.LENGTH_SHORT).show();
+
+                                            try {
+
+                                                GetLocation(lat,lon);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            //Toast.makeText(RegisterActivity.this, "try again", Toast.LENGTH_SHORT).show();
 
                                         }
                                     }
@@ -109,6 +130,24 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void GetLocation(Double latitude, Double longitude) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName();
+        LocationText.setText(address);
+        CityText.setText(city);
+        //Toast.makeText(this, address+" "+ city, Toast.LENGTH_SHORT).show();
+    }
+
     private void CreateAccount() {
         TypeUser.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 
@@ -118,6 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
         String password=InputPassword.getText().toString();
         String confirmpassword=InputConfirmPassword.getText().toString();
         String typeuser=String.valueOf(TypeUser.getSelectedItem());
+        String city=CityText.getText().toString();
 
         if(TextUtils.isEmpty(name) || name.length()<6)
         {
@@ -139,9 +179,13 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Toast.makeText(this,"Enter a valid type of user",Toast.LENGTH_SHORT).show();
         }
-        else if(TextUtils.isEmpty(location)|| typeuser.equals("Choose the type of user"))
+        else if(TextUtils.isEmpty(location))
         {
             Toast.makeText(this,"Enter location",Toast.LENGTH_SHORT).show();
+        }
+        else if(TextUtils.isEmpty(city))
+        {
+            Toast.makeText(this,"Enter city",Toast.LENGTH_SHORT).show();
         }
 
         else
@@ -153,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity {
                 loadingBar.setCanceledOnTouchOutside(false);
                 loadingBar.show();
 
-                ValidatePhoneNumber(name,phone,password,typeuser,location);
+                ValidatePhoneNumber(name,phone,password,typeuser,location,city);
             }
             else
             {
@@ -162,7 +206,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser,String location) {
+    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser,String location,String city) {
         final DatabaseReference RootRef;
         RootRef= FirebaseDatabase.getInstance().getReference();
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -176,6 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userdatamap.put("name",name);
                     userdatamap.put("type",typeuser);
                     userdatamap.put("address",location);
+                    userdatamap.put("city",city);
                     RootRef.child("Accounts").child(name).updateChildren(userdatamap).
                             addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

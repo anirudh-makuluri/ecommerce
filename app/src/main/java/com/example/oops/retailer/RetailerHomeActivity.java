@@ -11,13 +11,14 @@ import android.widget.ImageView;
 
 import com.example.oops.MainActivity;
 import com.example.oops.R;
+import com.example.oops.customer.CustomerHomeActivity;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RetailerHomeActivity extends AppCompatActivity {
     private ImageView milk,vegetables,fruits,dairy,beverages,breakfast,foodgrams,readymade;
-    private Button logoutbtn,checkorderbtn;
+    private Button logoutbtn,checkorderbtn,maintainproductsbtn;
     private AccessTokenTracker accessTokenTracker;
     private FirebaseAuth mFirebaseAuth;
 
@@ -35,6 +36,7 @@ public class RetailerHomeActivity extends AppCompatActivity {
         readymade=findViewById(R.id.readymade);
         logoutbtn=findViewById(R.id.retailer_logout);
         checkorderbtn=findViewById(R.id.check_order_btn);
+        maintainproductsbtn=findViewById(R.id.maintain_btn);
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +53,18 @@ public class RetailerHomeActivity extends AppCompatActivity {
                 };
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        maintainproductsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("Admin","Admin");
+                startActivity(intent);
+
+
             }
         });
         checkorderbtn.setOnClickListener(new View.OnClickListener() {

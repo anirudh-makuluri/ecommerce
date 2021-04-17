@@ -13,10 +13,14 @@ import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
+import com.example.oops.model.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +46,40 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Check();
+            }
+        });
+
+        FillText();
+
+    }
+
+    private void FillText() {
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Accounts").child(Prevalent.currentonlineUser.getName());
+//        String name= ref.child("name").toString();
+//        String phone=ref.child("phone").toString();
+//        String address=ref.child("address").toString();
+//        String city=ref.child("city").toString();
+//        nameEdittxt.setText(name);
+//        phoneEdittxt.setText(phone);
+//        addressEdittxt.setText(address);
+//        cityEdittxt.setText(city);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users usersdata=snapshot.getValue(Users.class);
+                String name=usersdata.getName();
+                String phone=usersdata.getPhone();
+                String address=usersdata.getAddress();
+                String city=usersdata.getCity();
+                nameEdittxt.setText(name);
+                phoneEdittxt.setText(phone);
+                addressEdittxt.setText(address);
+                cityEdittxt.setText(city);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 

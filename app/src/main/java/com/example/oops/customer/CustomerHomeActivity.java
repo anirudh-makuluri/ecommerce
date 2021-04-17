@@ -17,6 +17,7 @@ import com.example.oops.R;
 import com.example.oops.RegisterActivity;
 import com.example.oops.customer.ViewHolder.ProductViewHolder;
 import com.example.oops.model.Products;
+import com.example.oops.retailer.RetailerMaintainActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -51,12 +52,20 @@ public class CustomerHomeActivity extends AppCompatActivity
              private DatabaseReference ProductsRef;
              private RecyclerView recyclerView;
              RecyclerView.LayoutManager layoutManager;
+             private String type="";
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
+
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        if(bundle!=null)
+        type=getIntent().getExtras().get("Admin").toString();
+
+
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
         Paper.init(this);
 
@@ -69,8 +78,11 @@ public class CustomerHomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),CartActivity.class);
-                startActivity(intent);
+                if(!type.equals("Admin"))
+                {
+                    Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -88,11 +100,11 @@ public class CustomerHomeActivity extends AppCompatActivity
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        userNameTextView.setText(Prevalent.currentonlineUser.getName());
-
-
-        Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
-
+        if(!type.equals("Admin"))
+        {
+            userNameTextView.setText(Prevalent.currentonlineUser.getName());
+            Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        }
         recyclerView = findViewById(R.id.recycler_menu);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -116,12 +128,26 @@ public class CustomerHomeActivity extends AppCompatActivity
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
                                  productViewHolder.txtproductprice.setText(products.getPrice());
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
+
+
+
                                  productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-                                         Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
-                                         intent.putExtra("pid",products.getPid());
-                                         startActivity(intent);
+
+                                         if(type.equals("Admin"))
+                                         {
+                                             Intent intent = new Intent(getApplicationContext(), RetailerMaintainActivity.class);
+                                             intent.putExtra("pid",products.getPid());
+                                             startActivity(intent);
+                                         }
+
+                                         else
+                                         {
+                                             Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                             intent.putExtra("pid",products.getPid());
+                                             startActivity(intent);
+                                         }
                                      }
                                  });
 
@@ -174,8 +200,10 @@ public class CustomerHomeActivity extends AppCompatActivity
 
                  if (id == R.id.nav_cart)
                  {
-                     Intent intent = new Intent(getApplicationContext(),CartActivity.class);
-                     startActivity(intent);
+                     if(!type.equals("Admin")) {
+                         Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                         startActivity(intent);
+                     }
                  }
                  else if (id == R.id.nav_search)
                  {
@@ -188,8 +216,10 @@ public class CustomerHomeActivity extends AppCompatActivity
                  }
                  else if (id == R.id.nav_settings)
                  {
-                     Intent intent= new Intent(getApplicationContext(),Settings.class);
-                     startActivity(intent);
+                     if(!type.equals("Admin")) {
+                         Intent intent = new Intent(getApplicationContext(), Settings.class);
+                         startActivity(intent);
+                     }
 
                  }
                  else if (id == R.id.nav_logout)
