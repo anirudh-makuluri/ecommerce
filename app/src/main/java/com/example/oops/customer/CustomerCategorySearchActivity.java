@@ -10,8 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.oops.ProductDetailsActivity;
 import com.example.oops.R;
@@ -23,37 +22,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class SearchProductsActivity extends AppCompatActivity {
-    private Button SearchBtn;
-    private EditText inputTxt;
-    private RecyclerView searchList;
-    private String searchinput;
+public class CustomerCategorySearchActivity extends AppCompatActivity {
+    private RecyclerView categorysearchList;
+    private String category;
+    private TextView categorytxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_products);
-        SearchBtn = findViewById(R.id.search_product_button);
-        inputTxt = findViewById(R.id.search_product_text);
-        searchList = findViewById(R.id.search_list);
-        searchList.setLayoutManager(new LinearLayoutManager(SearchProductsActivity.this));
+        category=getIntent().getStringExtra("category");
+        setContentView(R.layout.activity_customer_category_search);
+        categorysearchList=findViewById(R.id.category_search_list);
+        categorysearchList.setLayoutManager(new LinearLayoutManager(CustomerCategorySearchActivity.this));
+        categorytxt=findViewById(R.id.search_category_text);
+        categorytxt.setText(category);
 
-        SearchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchinput = inputTxt.getText().toString().toLowerCase();
-                onStart();
-            }
-        });
+
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference().child("Products");
         FirebaseRecyclerOptions<Products> options=
                 new FirebaseRecyclerOptions.Builder<Products>()
-                        .setQuery(reference.orderByChild("pname").startAt(searchinput).endAt(searchinput),Products.class)
+                        .setQuery(reference.orderByChild("category").startAt(category).endAt(category),Products.class)
                         .build();
 
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter=
@@ -83,12 +75,7 @@ public class SearchProductsActivity extends AppCompatActivity {
                         return holder;
                     }
                 };
-        searchList.setAdapter(adapter);
+        categorysearchList.setAdapter(adapter);
         adapter.startListening();
     }
-
-
-    }
-
-
-
+}

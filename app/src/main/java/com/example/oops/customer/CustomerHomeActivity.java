@@ -66,7 +66,7 @@ public class CustomerHomeActivity extends AppCompatActivity
         type=getIntent().getExtras().get("Admin").toString();
 
 
-        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
+        ProductsRef = FirebaseDatabase.getInstance().getReference("Products");
         Paper.init(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -117,9 +117,19 @@ public class CustomerHomeActivity extends AppCompatActivity
              @Override
              protected void onStart() {
                  super.onStart();
-                 FirebaseRecyclerOptions<Products> options=
-                         new FirebaseRecyclerOptions.Builder<Products>()
-                         .setQuery(ProductsRef,Products.class).build();
+                 FirebaseRecyclerOptions<Products> options;
+                 if(!type.equals("Admin")) {
+                      options =
+                             new FirebaseRecyclerOptions.Builder<Products>()
+                                     .setQuery(ProductsRef, Products.class).build();
+                 }
+                 else
+                 {
+                      options =
+                             new FirebaseRecyclerOptions.Builder<Products>()
+                                     .setQuery(ProductsRef.orderByChild("retailername").startAt(Prevalent.currentonlineUser.getName()).endAt(Prevalent.currentonlineUser.getName()), Products.class).build();
+
+                 }
                  FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter=
                          new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
                              @Override
@@ -212,7 +222,8 @@ public class CustomerHomeActivity extends AppCompatActivity
                  }
                  else if (id == R.id.nav_categories)
                  {
-
+                     Intent intent = new Intent(getApplicationContext(),CustomerCategoryActivity.class);
+                     startActivity(intent);
                  }
                  else if (id == R.id.nav_settings)
                  {

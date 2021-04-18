@@ -1,18 +1,27 @@
 package com.example.oops.model;
 
 public class Cart {
-    private String pid,pname,price,quantity,discount;
+    private String pid,pname,price,quantity,discount,retailername;
     public Cart()
     {
 
     }
 
-    public Cart(String pid, String pname, String price, String quantity, String discount) {
+    public Cart(String pid, String pname, String price, String quantity, String discount,String retailername) {
         this.pid = pid;
         this.pname = pname;
         this.price = price;
         this.quantity = quantity;
         this.discount = discount;
+        this.retailername=retailername;
+    }
+
+    public String getRetailername() {
+        return retailername;
+    }
+
+    public void setRetailername(String retailername) {
+        this.retailername = retailername;
     }
 
     public String getPid() {

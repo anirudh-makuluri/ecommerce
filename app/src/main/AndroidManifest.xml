@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops"
         tools:replace="android:theme">
-        <activity android:name=".retailer.RetailerMaintainActivity"></activity>
+        <activity android:name=".customer.CustomerCategorySearchActivity"></activity>
+        <activity android:name=".customer.CustomerCategoryActivity" />
+        <activity android:name=".retailer.RetailerMaintainActivity" />
         <activity android:name=".customer.SearchProductsActivity" />
         <activity android:name=".ForgotActivity" />
         <activity android:name=".retailer.RetailerCustomerActivity" />

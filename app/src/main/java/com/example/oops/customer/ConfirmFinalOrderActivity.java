@@ -129,6 +129,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         ordersMap.put("address",addressEdittxt.getText().toString());
         ordersMap.put("city",cityEdittxt.getText().toString());
         ordersMap.put("state","not shipped");
+
         ordersRef.updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

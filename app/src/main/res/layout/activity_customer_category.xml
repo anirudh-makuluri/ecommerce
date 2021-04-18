@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customer.CustomerCategoryActivity">
+
+    <TextView
+        android:id="@+id/category_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a category"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        />
+    <LinearLayout
+        android:id="@+id/category_layout1"
+        android:layout_below="@+id/category_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/category_vegetables"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/veg"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_fruits"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/fruit"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_dairy"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/dairy"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_readymade"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/readymade"
+            android:layout_marginTop="25dp"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/category_layout2"
+        android:layout_below="@+id/category_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/category_milk"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/milk"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_beverages"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/bewarages"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_breakfast"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/cornflakes"
+            android:layout_marginTop="25dp"
+            />
+        <ImageView
+            android:id="@+id/category_foodgrams"
+            android:layout_marginRight="20dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/foodgrams"
+            android:layout_marginTop="25dp"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

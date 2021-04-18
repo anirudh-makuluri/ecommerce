@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -159,6 +160,7 @@ public class RetailerAddCategory extends AppCompatActivity {
         productmap.put("category",Categoryname);
         productmap.put("price",price);
         productmap.put("pname",pname);
+        productmap.put("retailername",Prevalent.currentonlineUser.getName());
         productRef.child(productRandomKey).updateChildren(productmap).
                 addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

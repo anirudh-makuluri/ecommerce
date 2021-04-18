@@ -35,6 +35,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ElegantNumberButton numberButton;
     private TextView productPrice,productDesc,productName;
     private String productID="",state="normal";
+    private String retailername="Retailer";
 
 
     @Override
@@ -74,6 +75,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     }
 
     private void addingToCartList() {
+
         String saveCurrentTime,saveCurrentDate;
         Calendar calForDate= Calendar.getInstance();
         SimpleDateFormat currentDate= new SimpleDateFormat("MM dd,yyyy");
@@ -82,34 +84,55 @@ public class ProductDetailsActivity extends AppCompatActivity {
         SimpleDateFormat currentTime= new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime=currentDate.format(calForDate.getTime());
         final DatabaseReference cartListRef=FirebaseDatabase.getInstance().getReference().child("Cart List");
-        final HashMap<String,Object> cartMap=new HashMap<>();
-        cartMap.put("pid",productID);
-        cartMap.put("pname",productName.getText().toString());
-        cartMap.put("price",productPrice.getText().toString());
-        cartMap.put("date",saveCurrentDate);
-        cartMap.put("time",saveCurrentTime);
-        cartMap.put("quantity",numberButton.getNumber());
-        cartMap.put("discount","");
-        cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products").child(productID).updateChildren(cartMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful())
-                        {
-                            cartListRef.child("Retailer View").child(Prevalent.currentonlineUser.getName()).child("Products").child(productID).updateChildren(cartMap)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(ProductDetailsActivity.this, "Added to cart", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
-                                            startActivity(intent);
+        final DatabaseReference productRef=FirebaseDatabase.getInstance().getReference("Products");
+        productRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try{retailername=snapshot.child(productID).child("retailername").getValue().toString();}
+                catch (NullPointerException e)
+                {
+                    Toast.makeText(ProductDetailsActivity.this, "theres no retailer for this product", Toast.LENGTH_SHORT).show();
+                }
 
-                                        }
-                                    });
+                System.out.println(retailername);
+                final HashMap<String,Object> cartMap=new HashMap<>();
+                System.out.println("hashmap "+retailername);
+                cartMap.put("pid",productID);
+                cartMap.put("pname",productName.getText().toString());
+                cartMap.put("price",productPrice.getText().toString());
+                cartMap.put("date",saveCurrentDate);
+                cartMap.put("time",saveCurrentTime);
+                cartMap.put("quantity",numberButton.getNumber());
+                cartMap.put("discount","");
+                cartMap.put("retailername",retailername);
+                cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products").child(productID).updateChildren(cartMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful())
+                                {
+                                    cartListRef.child("Retailer View").child(Prevalent.currentonlineUser.getName()).child("Products").child(productID).updateChildren(cartMap)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Toast.makeText(ProductDetailsActivity.this, "Added to cart", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
+                                                    startActivity(intent);
 
-                        }
-                    }
-                });
+                                                }
+                                            });
+
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void getProductDetails(String productID)
