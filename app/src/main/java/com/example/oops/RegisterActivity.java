@@ -43,7 +43,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button CreateAccountButton,LocationButton;
-    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,LocationText,CityText;
+    private EditText InputName,InputPhoneNumber,InputPassword,InputConfirmPassword,LocationText,CityText,EmailText;
     private Spinner TypeUser;
     private ProgressDialog loadingBar;
     private FusedLocationProviderClient fusedLocationClient;
@@ -66,11 +66,14 @@ public class RegisterActivity extends AppCompatActivity {
         CityText=findViewById(R.id.register_city_text);
         LocationButton=findViewById(R.id.register_location_btn);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        EmailText=findViewById(R.id.register_email_input);
 
         LocationButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(),GoogleMapActivity.class);
+                startActivity(intent);
                 System.out.println("Btn pressed");
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
                 { System.out.println("In build");
@@ -158,6 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmpassword=InputConfirmPassword.getText().toString();
         String typeuser=String.valueOf(TypeUser.getSelectedItem());
         String city=CityText.getText().toString();
+        String email=EmailText.getText().toString();
 
         if(TextUtils.isEmpty(name) || name.length()<6)
         {
@@ -187,6 +191,10 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Toast.makeText(this,"Enter city",Toast.LENGTH_SHORT).show();
         }
+        else if(TextUtils.isEmpty(email))
+        {
+            Toast.makeText(this,"Enter email",Toast.LENGTH_SHORT).show();
+        }
 
         else
         {
@@ -197,7 +205,7 @@ public class RegisterActivity extends AppCompatActivity {
                 loadingBar.setCanceledOnTouchOutside(false);
                 loadingBar.show();
 
-                ValidatePhoneNumber(name,phone,password,typeuser,location,city);
+                ValidatePhoneNumber(name,phone,password,typeuser,location,city,email);
             }
             else
             {
@@ -206,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser,String location,String city) {
+    private void ValidatePhoneNumber(String name, String phone, String password,String typeuser,String location,String city,String email) {
         final DatabaseReference RootRef;
         RootRef= FirebaseDatabase.getInstance().getReference();
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -221,6 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userdatamap.put("type",typeuser);
                     userdatamap.put("address",location);
                     userdatamap.put("city",city);
+                    userdatamap.put("email",email);
                     RootRef.child("Accounts").child(name).updateChildren(userdatamap).
                             addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

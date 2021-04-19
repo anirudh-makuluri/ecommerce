@@ -3,8 +3,10 @@ package com.example.oops.customer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -55,14 +57,6 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
 
     private void FillText() {
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Accounts").child(Prevalent.currentonlineUser.getName());
-//        String name= ref.child("name").toString();
-//        String phone=ref.child("phone").toString();
-//        String address=ref.child("address").toString();
-//        String city=ref.child("city").toString();
-//        nameEdittxt.setText(name);
-//        phoneEdittxt.setText(phone);
-//        addressEdittxt.setText(address);
-//        cityEdittxt.setText(city);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -135,6 +129,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful())
                     {
+
                         FirebaseDatabase.getInstance().getReference().child("Cart List")
                                 .child("User View")
                                 .child(Prevalent.currentonlineUser.getName())
@@ -146,6 +141,16 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                         {
                                             Toast.makeText(ConfirmFinalOrderActivity.this, "order placed", Toast.LENGTH_SHORT).show();
                                             Intent intent =new Intent(getApplicationContext(),CustomerHomeActivity.class);
+                                            try {
+                                                PendingIntent pi=PendingIntent.getActivity(getApplicationContext(), 0, intent,0);
+                                                SmsManager sms= SmsManager.getDefault();
+                                                sms.sendTextMessage("+91"+phoneEdittxt.getText().toString(), "+918121484108", "your order is placed.\n The total amount is:"+totalAmount, pi,null);
+                                            }
+                                            catch (SecurityException e)
+                                            {
+                                                Toast.makeText(ConfirmFinalOrderActivity.this, "Couldnt send an SMS unfortunately", Toast.LENGTH_SHORT).show();
+                                            }
+
                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
                                             finish();

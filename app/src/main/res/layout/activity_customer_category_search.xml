@@ -20,7 +20,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:padding="20dp"
+        android:padding="10dp"
         android:id="@+id/category_search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

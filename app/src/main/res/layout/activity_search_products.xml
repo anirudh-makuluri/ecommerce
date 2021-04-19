@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".customer.SearchProductsActivity">
 
     <RelativeLayout
@@ -16,19 +17,18 @@
 
         <EditText
             android:id="@+id/search_product_text"
-            android:layout_width="290dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:textColorHint="@color/white"
             android:hint="Name"
             />
-        <androidx.appcompat.widget.AppCompatButton
+        <ImageView
             android:id="@+id/search_product_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/send"
             android:layout_alignParentEnd="true"
-            android:text="Search"
-            android:layout_toRightOf="@+id/search_product_text"
-            android:background="@drawable/buttons2"
             />
 
 

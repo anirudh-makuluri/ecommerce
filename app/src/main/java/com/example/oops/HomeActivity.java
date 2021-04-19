@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +36,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button logout,submit,LocationButton;
     private Spinner spinner;
     private TextView Displayname;
-    private EditText LocationText,CityText;
+    private EditText LocationText,CityText,PhoneText;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
 
@@ -67,12 +69,38 @@ public class HomeActivity extends AppCompatActivity {
         Displayname=(TextView) findViewById(R.id.name);
         spinner=(Spinner) findViewById(R.id.spinner1);
         submit=findViewById(R.id.btnSubmit);
+        PhoneText=findViewById(R.id.home_phone_number_input);
         spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         LocationText=findViewById(R.id.register_location_text);
         CityText=findViewById(R.id.register_city_text);
         LocationButton=findViewById(R.id.register_location_btn);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
+        DatabaseReference rootref=FirebaseDatabase.getInstance().getReference("Accounts");
+        rootref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.child(googleSignInAccount.getDisplayName()).exists())
+                {
+                    String phone=snapshot.child(googleSignInAccount.getDisplayName()).child("phone").getValue().toString();
+                    Intent intent = new Intent(getApplicationContext(),otppage.class);
+                    intent.putExtra("phone",phone);
+                    intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
 
         LocationButton.setOnClickListener(new View.OnClickListener() {
 
@@ -92,6 +120,8 @@ public class HomeActivity extends AppCompatActivity {
                                         {
                                             Double lat=location.getLatitude();
                                             Double lon=location.getLongitude();
+                                            Intent intent=new Intent(getApplicationContext(),GoogleMapActivity.class);
+                                            startActivity(intent);
                                             try {
                                                 GetLocation(lat,lon);
                                             } catch (IOException e) {
@@ -103,6 +133,8 @@ public class HomeActivity extends AppCompatActivity {
                                         else
                                         {   Double lat=17.544841;
                                             Double lon=78.571687;
+                                            Intent intent=new Intent(getApplicationContext(),GoogleMapActivity.class);
+                                            startActivity(intent);
                                             // Toast.makeText(RegisterActivity.this, lat+" "+lon, Toast.LENGTH_SHORT).show();
 
                                             try {
@@ -136,9 +168,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
         if(googleSignInAccount!=null){
-            Displayname.setText("hello "+googleSignInAccount.getDisplayName()+". Select the type of user below");
+            Displayname.setText("Hello "+googleSignInAccount.getDisplayName());
             Users usersdata= new Users();
             usersdata.setName(googleSignInAccount.getDisplayName());
             Prevalent.currentonlineUser=usersdata;
@@ -172,6 +203,15 @@ public class HomeActivity extends AppCompatActivity {
                 String typeuser=String.valueOf(spinner.getSelectedItem());
                 String city=CityText.getText().toString();
                 String location=LocationText.getText().toString();
+                String email=googleSignInAccount.getEmail();
+                String phone= PhoneText.getText().toString();
+                if(TextUtils.isEmpty(phone))
+                    Toast.makeText(HomeActivity.this, "enter phone number", Toast.LENGTH_SHORT).show();
+                else if(TextUtils.isEmpty(city))
+                    Toast.makeText(HomeActivity.this, "enter city", Toast.LENGTH_SHORT).show();
+                else if(TextUtils.isEmpty(location))
+                    Toast.makeText(HomeActivity.this, "enter location", Toast.LENGTH_SHORT).show();
+                else{
                 final DatabaseReference RootRef;
                 RootRef= FirebaseDatabase.getInstance().getReference();
                 RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -182,39 +222,16 @@ public class HomeActivity extends AppCompatActivity {
                         userdatamap.put("type",typeuser);
                         userdatamap.put("address",location);
                         userdatamap.put("city",city);
+                        userdatamap.put("email",email);
+                        userdatamap.put("phone",phone);
                         RootRef.child("Accounts").child(name).updateChildren(userdatamap).
                                 addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(HomeActivity.this,"Type of user added successfully",Toast.LENGTH_SHORT).show();
-                                        if(typeuser.equals("Wholesaler"))
-                                        {
-                                            Intent intent = new Intent(getApplicationContext(), WholesalerHomeActivity.class
-                                            );
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            Toast.makeText(HomeActivity.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                                        }
-                                        else if(typeuser.equals("Customer"))
-                                        {
-                                            Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class
-                                            );
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            Toast.makeText(HomeActivity.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                                        }
-                                        else if(typeuser.equals("Retailer"))
-                                        {
-                                            Intent intent = new Intent(getApplicationContext(), RetailerHomeActivity.class
-                                            );
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            Toast.makeText(HomeActivity.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(HomeActivity.this, "some error occured", Toast.LENGTH_SHORT).show();
-                                        }
+                                        Intent intent = new Intent(getApplicationContext(),otppage.class);
+                                        intent.putExtra("phone",phone);
+                                        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
 
 
                                     }
@@ -225,7 +242,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                });}
             }
         });
 

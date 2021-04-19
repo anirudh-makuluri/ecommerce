@@ -12,7 +12,7 @@ import com.example.oops.R;
 
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView txtproductname, txtproductdesc,txtproductprice;
+    public TextView txtproductname, txtproductdesc,txtproductprice,txtretailername;
     public ImageView imageView;
     public ItemClickListener listener;
 
@@ -22,6 +22,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         txtproductname = itemView.findViewById(R.id.product_name);
         txtproductdesc = itemView.findViewById(R.id.product_description);
         txtproductprice = itemView.findViewById(R.id.product_price);
+        txtretailername=itemView.findViewById(R.id.retailer_name);
     }
 
     public void setItemClickListener(ItemClickListener listener)

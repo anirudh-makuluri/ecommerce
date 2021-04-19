@@ -8,8 +8,8 @@
     tools:context=".RegisterActivity">
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/final_logo"
         android:id="@+id/register_applogo"
         android:layout_centerHorizontal="true"
@@ -46,19 +46,36 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:hint="Phone number"
-        android:inputType="number"
+        android:inputType="phone"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:textSize="17sp"
         android:textStyle="bold">
-
     </EditText>
+    <EditText
+        android:id="@+id/register_email_input"
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_phone_number_input"
+        android:background="@drawable/input_design"
+        android:padding="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="bold">
+    </EditText>
+
 
     <EditText
         android:id="@+id/register_password_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_phone_number_input"
+        android:layout_below="@+id/register_email_input"
         android:background="@drawable/input_design"
         android:layout_marginTop="6dp"
         android:padding="20dp"
@@ -148,6 +165,7 @@
 
 
     </LinearLayout>
+
 
 
     <androidx.appcompat.widget.AppCompatButton

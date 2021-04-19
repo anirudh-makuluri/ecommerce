@@ -38,7 +38,7 @@ public class RetailerCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retailer_customer);
         userID=getIntent().getStringExtra("uid");
-        Toast.makeText(this, userID+" in customerhomeactivity", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, userID+" in customerhomeactivity", Toast.LENGTH_SHORT).show();
         //System.out.println(userID+" in customerhomeactivity");
         productList=findViewById(R.id.products_list);
         productList.setHasFixedSize(true);
@@ -51,30 +51,75 @@ public class RetailerCustomerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         final DatabaseReference cartListRef= FirebaseDatabase.getInstance().getReference().child("Cart List");
-        FirebaseRecyclerOptions<Cart> options=
-                new FirebaseRecyclerOptions.Builder<Cart>()
-                        .setQuery(cartListRef.child("Retailer View").child(userID).child("Products"),Cart.class)
-                        .build();
+        FirebaseRecyclerOptions<Cart> options;
+        try
+        {
+            options= new FirebaseRecyclerOptions.Builder<Cart>()
+                    .setQuery(cartListRef.child("Retailer View").child(userID).child("Products").orderByChild("retailername").equalTo(Prevalent.currentonlineUser.getName()),Cart.class)
+                    .build();
+            FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
+                    = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
+                @Override
+                protected void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, int i, @NonNull Cart cart) {
+                    cartViewHolder.txtProductQuantity.setText("Quantity:"+cart.getQuantity());
+                    cartViewHolder.txtProductPrice.setText("Price:"+cart.getPrice());
+                    cartViewHolder.txtProductName.setText("Name:"+cart.getPname());
+                    cartViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CharSequence options[] = new CharSequence[]
+                                    {
+                                            "Yes",
+                                            "No"
 
-        FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
-                = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, int i, @NonNull Cart cart) {
-                cartViewHolder.txtProductQuantity.setText("Quantity:"+cart.getQuantity());
-                cartViewHolder.txtProductPrice.setText("Price:"+cart.getPrice());
-                cartViewHolder.txtProductName.setText("Name:"+cart.getPname());
+                                    };
+                            AlertDialog.Builder builder= new AlertDialog.Builder(RetailerCustomerActivity.this);
+                            builder.setTitle("Have you shipped this product?");
+                            builder.setItems(options, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(which==0)
+                                    {
+                                        try {
+                                            String uID=getRef(i).getKey();
+                                            cartListRef.child("Retailer View").child(userID).child("Products").child(uID).removeValue();
+                                        }
+                                        catch (IndexOutOfBoundsException e)
+                                        {
+                                            Toast.makeText(RetailerCustomerActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                        }
 
-            }
+                                    }
+                                    else
+                                    {
+                                        finish();
+                                    }
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
 
-            @NonNull
-            @Override
-            public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_items_layout,parent,false);
-                CartViewHolder holder = new CartViewHolder(view);
-                return holder;
-            }
-        };
-        productList.setAdapter(adapter);
-        adapter.startListening();
+                }
+
+                @NonNull
+                @Override
+                public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_items_layout,parent,false);
+                    CartViewHolder holder = new CartViewHolder(view);
+                    return holder;
+                }
+            };
+            productList.setAdapter(adapter);
+            adapter.startListening();
+        }
+        catch (NullPointerException e)
+        {
+            Toast.makeText(this, "You delivered all products!!", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+
     }
 }

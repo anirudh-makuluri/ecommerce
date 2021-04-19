@@ -28,6 +28,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rey.material.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
@@ -53,17 +54,34 @@ public class CustomerHomeActivity extends AppCompatActivity
              private RecyclerView recyclerView;
              RecyclerView.LayoutManager layoutManager;
              private String type="";
+             private ImageView searchbtn;
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
+        searchbtn=findViewById(R.id.product_search);
 
-        Intent intent=getIntent();
-        Bundle bundle=intent.getExtras();
-        if(bundle!=null)
-        type=getIntent().getExtras().get("Admin").toString();
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SearchProductsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        try{
+            Intent intent=getIntent();
+            Bundle bundle=intent.getExtras();
+            if(bundle!=null)
+                type=getIntent().getExtras().get("Admin").toString();
+        }
+        catch (NullPointerException e)
+        {
+         System.out.println(e);
+        }
+
 
 
         ProductsRef = FirebaseDatabase.getInstance().getReference("Products");
@@ -137,6 +155,7 @@ public class CustomerHomeActivity extends AppCompatActivity
                                  productViewHolder.txtproductname.setText(products.getPname());
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
                                  productViewHolder.txtproductprice.setText(products.getPrice());
+                                 productViewHolder.txtretailername.setText(products.getRetailername());
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
 
 
@@ -215,11 +234,7 @@ public class CustomerHomeActivity extends AppCompatActivity
                          startActivity(intent);
                      }
                  }
-                 else if (id == R.id.nav_search)
-                 {
-                     Intent intent = new Intent(getApplicationContext(),SearchProductsActivity.class);
-                     startActivity(intent);
-                 }
+
                  else if (id == R.id.nav_categories)
                  {
                      Intent intent = new Intent(getApplicationContext(),CustomerCategoryActivity.class);

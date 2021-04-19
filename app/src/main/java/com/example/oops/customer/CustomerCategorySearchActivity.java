@@ -55,6 +55,7 @@ public class CustomerCategorySearchActivity extends AppCompatActivity {
                         productViewHolder.txtproductname.setText(products.getPname());
                         productViewHolder.txtproductdesc.setText(products.getDesc());
                         productViewHolder.txtproductprice.setText(products.getPrice());
+                        productViewHolder.txtretailername.setText(products.getRetailername());
                         Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
                         productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

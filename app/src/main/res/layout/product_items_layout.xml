@@ -62,6 +62,18 @@
             android:textSize="14dp"
             android:textColor="@color/colorPrimaryDark"
             />
+        <TextView
+            android:id="@+id/retailer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_below="@id/product_description"
+            android:text="retailer name"
+            android:textAlignment="viewEnd"
+            />
+
+
+
 <!--        <androidx.appcompat.widget.AppCompatButton-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
