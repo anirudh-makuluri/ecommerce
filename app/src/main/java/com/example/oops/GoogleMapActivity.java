@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.example.oops.Prevalent.Prevalent;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,6 +20,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class GoogleMapActivity extends AppCompatActivity {
     SupportMapFragment supportMapFragment;
@@ -55,6 +63,25 @@ public class GoogleMapActivity extends AppCompatActivity {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(GoogleMap googleMap) {
+                            String name= getIntent().getStringExtra("name");
+                            DatabaseReference mapref= FirebaseDatabase.getInstance().getReference("Accounts").child(name);
+                            mapref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Double latitude=location.getLatitude();
+                                    Double longitude=location.getLongitude();
+                                    HashMap<String,Object> userdatamap= new HashMap<>();
+                                    userdatamap.put("latitude",latitude);
+                                    userdatamap.put("longitude",longitude);
+                                    mapref.updateChildren(userdatamap);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                             LatLng latLng= new LatLng(location.getLatitude()
                                     ,location.getLongitude());
                             MarkerOptions options=new MarkerOptions().position(latLng).title("I am there");

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,7 +30,8 @@ public class RetailerMaintainActivity extends AppCompatActivity {
     private Button applychangesbtn,deletebtn;
     private EditText name,price,desc;
     private ImageView imageView;
-    private String productID="";
+    private String productID="",stock;
+    private CheckBox stkbx;
     private DatabaseReference productsRef;
 
 
@@ -37,6 +39,7 @@ public class RetailerMaintainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retailer_maintain);
+        stkbx=findViewById(R.id.maintain_stock);
         applychangesbtn=findViewById(R.id.apply_changes_btn);
         name=findViewById(R.id.maintain_product_name);
         price=findViewById(R.id.maintain_product_price);
@@ -81,6 +84,14 @@ public class RetailerMaintainActivity extends AppCompatActivity {
     }
 
     private void applyChanges() {
+        if(stkbx.isChecked())
+        {
+         stock="in stock";
+        }
+        else
+        {
+            stock="not in stock";
+        }
 
         String Pname=name.getText().toString().toLowerCase();
         String Pprice=price.getText().toString();
@@ -105,12 +116,13 @@ public class RetailerMaintainActivity extends AppCompatActivity {
             productmap.put("desc",Pdescription);
             productmap.put("price",Pprice);
             productmap.put("pname",Pname);
+            productmap.put("stock",stock);
             productsRef.updateChildren(productmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                  if(task.isSuccessful())
                  {
-                     Toast.makeText(RetailerMaintainActivity.this, "applied chnages successfully", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(RetailerMaintainActivity.this, "applied changes successfully", Toast.LENGTH_SHORT).show();
                  Intent intent= new Intent(getApplicationContext(),RetailerHomeActivity.class);
                  startActivity(intent);
                  finish();

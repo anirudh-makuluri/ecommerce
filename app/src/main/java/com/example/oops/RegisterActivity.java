@@ -73,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(),GoogleMapActivity.class);
+                intent.putExtra("name",InputName.getText().toString());
                 startActivity(intent);
                 System.out.println("Btn pressed");
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
@@ -220,7 +221,7 @@ public class RegisterActivity extends AppCompatActivity {
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!(snapshot.child("Accounts").child(name).exists()))
+                if(true)
                 {
                     HashMap<String,Object> userdatamap= new HashMap<>();
                     userdatamap.put("phone",phone);

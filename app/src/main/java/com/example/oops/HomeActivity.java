@@ -82,11 +82,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if(snapshot.child(googleSignInAccount.getDisplayName()).exists())
-                {
+                if(snapshot.child(googleSignInAccount.getDisplayName()).child("phone").exists())
+                {   Users userdata=snapshot.child(googleSignInAccount.getDisplayName()).getValue(Users.class);
+                Prevalent.currentonlineUser=userdata;
                     String phone=snapshot.child(googleSignInAccount.getDisplayName()).child("phone").getValue().toString();
                     Intent intent = new Intent(getApplicationContext(),otppage.class);
-                    intent.putExtra("phone",phone);
+                    intent.putExtra("phonenumber",phone);
+                    intent.putExtra("name",googleSignInAccount.getDisplayName());
                     intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
@@ -121,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                                             Double lat=location.getLatitude();
                                             Double lon=location.getLongitude();
                                             Intent intent=new Intent(getApplicationContext(),GoogleMapActivity.class);
+                                            intent.putExtra("name",googleSignInAccount.getDisplayName());
                                             startActivity(intent);
                                             try {
                                                 GetLocation(lat,lon);

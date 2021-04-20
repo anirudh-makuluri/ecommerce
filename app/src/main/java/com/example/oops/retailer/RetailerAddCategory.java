@@ -160,6 +160,7 @@ public class RetailerAddCategory extends AppCompatActivity {
         productmap.put("category",Categoryname);
         productmap.put("price",price);
         productmap.put("pname",pname);
+        productmap.put("stock","in stock");
         productmap.put("retailername",Prevalent.currentonlineUser.getName());
         productRef.child(productRandomKey).updateChildren(productmap).
                 addOnCompleteListener(new OnCompleteListener<Void>() {

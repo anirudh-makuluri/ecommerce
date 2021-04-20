@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.oops.ProductDetailsActivity;
 import com.example.oops.R;
 import com.example.oops.customer.ViewHolder.ProductViewHolder;
 import com.example.oops.model.Products;
+import com.example.oops.retailer.RetailerMaintainActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -65,13 +67,36 @@ public class SearchProductsActivity extends AppCompatActivity {
                         productViewHolder.txtproductdesc.setText(products.getDesc());
                         productViewHolder.txtproductprice.setText(products.getPrice());
                         productViewHolder.txtretailername.setText(products.getRetailername());
+                        if(products.getStock().equals("in stock"))
+                        {
+                            productViewHolder.instock.setVisibility(View.VISIBLE);
+                            productViewHolder.notinstock.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            productViewHolder.instock.setVisibility(View.INVISIBLE);
+                            productViewHolder.notinstock.setVisibility(View.VISIBLE);
+                        }
                         Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
                         productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
-                                intent.putExtra("pid",products.getPid());
-                                startActivity(intent);
+                                if(products.getStock().equals("in stock"))
+                                {
+
+
+
+                                        Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                        intent.putExtra("pid",products.getPid());
+                                        startActivity(intent);
+
+                                }
+                                else
+                                {
+                                    Toast.makeText(SearchProductsActivity.this, "This product is currently not in stock", Toast.LENGTH_SHORT).show();
+                                }
+
+
                             }
                         });
 

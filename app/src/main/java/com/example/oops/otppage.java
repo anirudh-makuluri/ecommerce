@@ -47,6 +47,7 @@ public class otppage extends AppCompatActivity {
         EditText otpinput=findViewById(R.id.otp_input);
         Button login=findViewById(R.id.otp_login_btn);
         String phonenumber=getIntent().getStringExtra("phonenumber");
+        Toast.makeText(this, phonenumber, Toast.LENGTH_SHORT).show();
         String name=getIntent().getStringExtra("name");
         sendVerificationToUser(phonenumber);
         logoutbtn=findViewById(R.id.otppage_logout);
@@ -115,8 +116,9 @@ public class otppage extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(otppage.this, "error", Toast.LENGTH_SHORT).show();
-            int i=1;
+            Toast.makeText(otppage.this, "error retrieving otp via phone", Toast.LENGTH_SHORT).show();
+            int i=0;
+
             if(i==1)
             {
                 Toast.makeText(otppage.this, "But do this", Toast.LENGTH_SHORT).show();

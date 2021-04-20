@@ -2,14 +2,14 @@ package com.example.oops.model;
 
 public class Products
 {
-    private String pname,desc="String",price,image,date,time,pid,category,retailername;
+    private String pname,desc="String",price,image,date,time,pid,category,retailername,stock;
 
     public Products()
     {
 
     }
 
-    public Products(String pname, String desc, String price, String image, String date, String time, String pid, String category,String retailername) {
+    public Products(String pname, String desc, String price, String image, String date, String time, String pid, String category,String retailername,String stock) {
         this.pname = pname;
         this.desc = desc;
         this.price = price;
@@ -19,6 +19,15 @@ public class Products
         this.pid = pid;
         this.category = category;
         this.retailername=retailername;
+        this.stock=stock;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
     }
 
     public String getRetailername() {

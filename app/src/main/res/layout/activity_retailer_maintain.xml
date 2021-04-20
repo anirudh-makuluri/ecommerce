@@ -30,8 +30,9 @@
 
         <ImageView
             android:id="@+id/maintain_product_image"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/maintain_product_name"
             android:scaleType="centerCrop"
             android:layout_marginTop="10dp"
@@ -67,11 +68,21 @@
             android:textSize="14dp"
             android:textColor="@color/colorPrimaryDark"
             />
+        <CheckBox
+            android:id="@+id/maintain_stock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="In Stock"
+            android:checked="true"
+            android:textSize="18sp"
+            android:layout_below="@+id/maintain_product_description"
+
+            />
         <Button
             android:id="@+id/apply_changes_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/maintain_product_description"
+            android:layout_below="@+id/maintain_stock"
             android:text="Apply Changes"
             android:background="@drawable/input_design"
             android:layout_marginTop="5dp"

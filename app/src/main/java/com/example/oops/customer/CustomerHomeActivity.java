@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
@@ -63,13 +64,9 @@ public class CustomerHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_customer_home);
         searchbtn=findViewById(R.id.product_search);
 
-        searchbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),SearchProductsActivity.class);
-                startActivity(intent);
-            }
-        });
+
+
+
 
         try{
             Intent intent=getIntent();
@@ -82,6 +79,17 @@ public class CustomerHomeActivity extends AppCompatActivity
          System.out.println(e);
         }
 
+        if(type.equals("Admin"))
+        {
+            searchbtn.setVisibility(View.INVISIBLE);
+        }
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SearchProductsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         ProductsRef = FirebaseDatabase.getInstance().getReference("Products");
@@ -137,6 +145,8 @@ public class CustomerHomeActivity extends AppCompatActivity
                  super.onStart();
                  FirebaseRecyclerOptions<Products> options;
                  if(!type.equals("Admin")) {
+
+
                       options =
                              new FirebaseRecyclerOptions.Builder<Products>()
                                      .setQuery(ProductsRef, Products.class).build();
@@ -156,29 +166,47 @@ public class CustomerHomeActivity extends AppCompatActivity
                                  productViewHolder.txtproductdesc.setText(products.getDesc());
                                  productViewHolder.txtproductprice.setText(products.getPrice());
                                  productViewHolder.txtretailername.setText(products.getRetailername());
+                                 if(products.getStock().equals("in stock"))
+                                 {
+                                     productViewHolder.instock.setVisibility(View.VISIBLE);
+                                     productViewHolder.notinstock.setVisibility(View.INVISIBLE);
+                                 }
+                                 else
+                                 {
+                                     productViewHolder.instock.setVisibility(View.INVISIBLE);
+                                     productViewHolder.notinstock.setVisibility(View.VISIBLE);
+                                 }
                                  Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
-
 
 
                                  productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-
-                                         if(type.equals("Admin"))
+                                         if(products.getStock().equals("in stock"))
                                          {
-                                             Intent intent = new Intent(getApplicationContext(), RetailerMaintainActivity.class);
-                                             intent.putExtra("pid",products.getPid());
-                                             startActivity(intent);
-                                         }
+                                             if(type.equals("Admin"))
+                                             {
+                                                 Intent intent = new Intent(getApplicationContext(), RetailerMaintainActivity.class);
+                                                 intent.putExtra("pid",products.getPid());
+                                                 startActivity(intent);
+                                             }
 
+                                             else
+                                             {
+                                                 Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                                 intent.putExtra("pid",products.getPid());
+                                                 startActivity(intent);
+                                             }
+                                         }
                                          else
                                          {
-                                             Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
-                                             intent.putExtra("pid",products.getPid());
-                                             startActivity(intent);
+                                             Toast.makeText(CustomerHomeActivity.this, "This product is currently not in stock", Toast.LENGTH_SHORT).show();
                                          }
+
+
                                      }
                                  });
+
 
                              }
 
