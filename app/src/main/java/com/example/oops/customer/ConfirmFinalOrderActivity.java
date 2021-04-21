@@ -176,13 +176,17 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
                                 PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                                 SmsManager sms = SmsManager.getDefault();
+                                int q=Integer.valueOf(quantity);
+                                int p=Integer.valueOf(price);
+                                int totalprice=q*p;
                                 sms.sendTextMessage("+91"+phone, null,
                                         "Greetings from Krazy Kart!!!" +
                                                 "\nHello "+retailername +
                                                 "\n You got an order from:"+name+
                                                 "\nItem:"+pname+
                                                 "\nQuantity:"+quantity+
-                                                "\nPrice:"+price, pi, null);
+                                                "\nPrice:"+price+
+                                                 "\nTotal Amount:"+totalprice, pi, null);
                             }catch (NullPointerException e)
                             {
 

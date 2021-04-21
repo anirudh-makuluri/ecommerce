@@ -56,6 +56,16 @@ public class CustomerCategorySearchActivity extends AppCompatActivity {
                         productViewHolder.txtproductdesc.setText(products.getDesc());
                         productViewHolder.txtproductprice.setText(products.getPrice());
                         productViewHolder.txtretailername.setText(products.getRetailername());
+                        if(products.getStock().equals("in stock"))
+                        {
+                            productViewHolder.instock.setVisibility(View.VISIBLE);
+                            productViewHolder.notinstock.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            productViewHolder.instock.setVisibility(View.INVISIBLE);
+                            productViewHolder.notinstock.setVisibility(View.VISIBLE);
+                        }
                         Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
                         productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

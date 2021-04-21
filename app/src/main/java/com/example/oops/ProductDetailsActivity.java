@@ -105,6 +105,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 cartMap.put("quantity",numberButton.getNumber());
                 cartMap.put("discount","");
                 cartMap.put("retailername",retailername);
+                cartMap.put("state","not shipped");
                 cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products").child(productID).updateChildren(cartMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

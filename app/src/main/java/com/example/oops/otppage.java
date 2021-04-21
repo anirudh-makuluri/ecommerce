@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class otppage extends AppCompatActivity {
     String verificationCodeBySystem;
     private Button logoutbtn,submitbtn;
     private EditText otpuser;
+    private Button emergency;
+    int i=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,50 @@ public class otppage extends AppCompatActivity {
         logoutbtn=findViewById(R.id.otppage_logout);
         submitbtn=findViewById(R.id.otppage_emer_submit);
         otpuser=findViewById(R.id.otp_typeuser);
+        emergency=findViewById(R.id.emergency);
+        emergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(otppage.this, "But do this", Toast.LENGTH_SHORT).show();
+                otpuser.setVisibility(View.VISIBLE);
+                submitbtn.setVisibility(View.VISIBLE);
+                submitbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String typeuser=otpuser.getText().toString();
+
+                        if(typeuser.equals("Wholesaler"))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), WholesalerHomeActivity.class
+                            );
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                        }
+                        else if(typeuser.equals("Customer"))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class
+                            );
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                        }
+                        else if(typeuser.equals("Retailer"))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), RetailerHomeActivity.class
+                            );
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(otppage.this, "some error occured", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
 
 
@@ -117,49 +164,8 @@ public class otppage extends AppCompatActivity {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(otppage.this, "error retrieving otp via phone", Toast.LENGTH_SHORT).show();
-            int i=0;
 
-            if(i==1)
-            {
-                Toast.makeText(otppage.this, "But do this", Toast.LENGTH_SHORT).show();
-                otpuser.setVisibility(View.VISIBLE);
-                submitbtn.setVisibility(View.VISIBLE);
-                submitbtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String typeuser=otpuser.getText().toString();
 
-                        if(typeuser.equals("Wholesaler"))
-                        {
-                            Intent intent = new Intent(getApplicationContext(), WholesalerHomeActivity.class
-                            );
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                        }
-                        else if(typeuser.equals("Customer"))
-                        {
-                            Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class
-                            );
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                        }
-                        else if(typeuser.equals("Retailer"))
-                        {
-                            Intent intent = new Intent(getApplicationContext(), RetailerHomeActivity.class
-                            );
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            Toast.makeText(otppage.this, "you are " + typeuser, Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(otppage.this, "some error occured", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
 
         }
 

@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_background_png"
     tools:context=".otppage">
+    <Button
+        android:id="@+id/emergency"
+        android:layout_width="15dp"
+        android:text="e"
+        android:layout_height="15dp"/>
 
     <EditText
         android:id="@+id/otp_input"
