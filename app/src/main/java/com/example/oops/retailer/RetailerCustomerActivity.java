@@ -10,16 +10,19 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.ProductDetailsActivity;
 import com.example.oops.R;
 import com.example.oops.customer.CartActivity;
+import com.example.oops.customer.CustomerOrderActivity;
 import com.example.oops.customer.ViewHolder.CartViewHolder;
 import com.example.oops.customer.ViewHolder.OrderViewHolder;
 import com.example.oops.model.Cart;
@@ -35,6 +38,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class RetailerCustomerActivity extends AppCompatActivity {
 
@@ -103,7 +115,7 @@ public class RetailerCustomerActivity extends AppCompatActivity {
                                             System.out.println(userID);
                                             System.out.println(uID);
                                             System.out.println(text);
-//                                            Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
+//                                            Intent intent=new Intent(getApplicationContext(),RetailerMaintainActivity.class);
 //                                            startActivity(intent);
 
 
@@ -127,7 +139,7 @@ public class RetailerCustomerActivity extends AppCompatActivity {
                                             System.out.println(userID);
                                             System.out.println(uID);
                                             System.out.println(text);
-//                                            Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
+//                                            Intent intent=new Intent(getApplicationContext(),RetailerMaintainActivity.class);
 //                                            startActivity(intent);
 
 
@@ -150,7 +162,7 @@ public class RetailerCustomerActivity extends AppCompatActivity {
                                             System.out.println(userID);
                                             System.out.println(uID);
                                             System.out.println(text);
-//                                            Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
+//                                            Intent intent=new Intent(getApplicationContext(),RetailerMaintainActivity.class);
 //                                            startActivity(intent);
 
 
@@ -175,30 +187,9 @@ public class RetailerCustomerActivity extends AppCompatActivity {
                                             System.out.println(userID);
                                             System.out.println(uID);
                                             System.out.println(text);
-//                                            Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
-//                                            startActivity(intent);
-                                            Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
-                                            PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                                            SmsManager sms = SmsManager.getDefault();
-                                            DatabaseReference ref=FirebaseDatabase.getInstance().getReference("Accounts");
-                                            ref.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    String phone=snapshot.child(userID).child("phone").getValue().toString();
-                                                    sms.sendTextMessage("+91"+phone, null,
+                                            SendSmsToCustomer(userID,cart.getPname());
 
-                                                                    "Hello "+userID+
 
-                                                                            "\nYour order:"+cart.getPname() +" has been delivered successfully!"+
-                                                                            "\nDont forget to leave a feedback in the app "
-                                                                    , pi, null);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
 
 
 
@@ -241,4 +232,87 @@ public class RetailerCustomerActivity extends AppCompatActivity {
 
 
     }
+
+    private void SendSmsToCustomer(String userID,String product) {
+        DatabaseReference rootref=FirebaseDatabase.getInstance().getReference("Cart List").child("Retailer View").child(userID).child("Products");
+        rootref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot postsnapshot:snapshot.getChildren())
+                {
+                    String retailername = null;
+                    try {
+                        retailername=postsnapshot.child("retailername").getValue().toString();
+                    }catch (NullPointerException e){}
+
+                    if(retailername==null){
+                        retailername=postsnapshot.child("wholesalername").getValue().toString();
+                    }
+                    String pname=postsnapshot.child("pname").getValue().toString();
+                    String price=postsnapshot.child("price").getValue().toString();
+                    String quantity=postsnapshot.child("quantity").getValue().toString();
+                    System.out.println("retailer name:"+retailername);
+
+                    DatabaseReference phoneref=FirebaseDatabase.getInstance().getReference("Accounts");
+                    String finalRetailername = retailername;
+                    phoneref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String email=snapshot.child(finalRetailername).child("email").getValue().toString();
+                            final String username="krazykartoops@gmail.com";
+                            final String password="vamsithope";
+                            int q=Integer.valueOf(quantity);
+                            int p=Integer.valueOf(price);
+                            int totalprice=q*p;
+                            String messageToSend="Hello "+userID+
+                                    "\nYour order:"+product+" has been delivered successfully!"+
+                                    "\nDont forget to leave a feedback in the app ";
+                            Properties props= new Properties();
+                            props.put("mail.smtp.auth","true");
+                            props.put("mail.smtp.starttls.enable","true");
+                            props.put("mail.smtp.host","smtp.gmail.com");
+                            props.put("mail.smtp.port","587");
+                            Session session= Session.getInstance(props,
+                                    new javax.mail.Authenticator(){
+                                        @Override
+                                        protected PasswordAuthentication getPasswordAuthentication(){
+                                            return new PasswordAuthentication(username,password);
+                                        }
+                                    });
+                            try{
+                                Message message= new MimeMessage(session);
+                                message.setFrom(new InternetAddress(username));
+                                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+                                message.setSubject("Message from Krazy Kart");
+                                message.setText(messageToSend);
+                                Transport.send(message);
+                                // Toast.makeText(MainActivity.this, "sent mail", Toast.LENGTH_SHORT).show();
+                            }
+                            catch (MessagingException e){
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
+    }
+
+
 }

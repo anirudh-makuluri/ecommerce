@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.NetworkOnMainThreadException;
+import android.os.StrictMode;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
 import com.example.oops.model.Users;
+import com.example.oops.retailer.RetailerHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +36,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class ConfirmFinalOrderActivity extends AppCompatActivity {
-    private EditText nameEdittxt, phoneEdittxt, addressEdittxt, cityEdittxt;
+    private EditText nameEdittxt, emailEdittxt, addressEdittxt, cityEdittxt;
     private Button confirmorderbtn;
     private String totalAmount = "";
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
@@ -46,7 +58,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirm_final_order);
         confirmorderbtn = findViewById(R.id.confirm_final_order_btn);
         nameEdittxt = findViewById(R.id.shipment_name);
-        phoneEdittxt = findViewById(R.id.shipment_phone);
+        emailEdittxt = findViewById(R.id.shipment_phone);
         addressEdittxt = findViewById(R.id.shipment_address);
         cityEdittxt = findViewById(R.id.shipment_city);
         totalAmount = getIntent().getStringExtra("Total Price");
@@ -69,11 +81,11 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users usersdata = snapshot.getValue(Users.class);
                 String name = usersdata.getName();
-                String phone = usersdata.getPhone();
+                String email = usersdata.getEmail();
                 String address = usersdata.getAddress();
                 String city = usersdata.getCity();
                 nameEdittxt.setText(name);
-                phoneEdittxt.setText(phone);
+                emailEdittxt.setText(email);
                 addressEdittxt.setText(address);
                 cityEdittxt.setText(city);
             }
@@ -89,8 +101,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
     private void Check() {
         if (TextUtils.isEmpty(nameEdittxt.getText().toString())) {
             Toast.makeText(this, "provide name", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(phoneEdittxt.getText().toString())) {
-            Toast.makeText(this, "provide phone number", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(emailEdittxt.getText().toString())) {
+            Toast.makeText(this, "provide email", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(addressEdittxt.getText().toString())) {
             Toast.makeText(this, "provide address", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(cityEdittxt.getText().toString())) {
@@ -115,7 +127,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         HashMap<String, Object> ordersMap = new HashMap<>();
         ordersMap.put("totalAmount", totalAmount);
         ordersMap.put("name", nameEdittxt.getText().toString());
-        ordersMap.put("phone", phoneEdittxt.getText().toString());
+        ordersMap.put("email", emailEdittxt.getText().toString());
         ordersMap.put("date", saveCurrentDate);
         ordersMap.put("time", saveCurrentTime);
         ordersMap.put("address", addressEdittxt.getText().toString());
@@ -136,12 +148,12 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(ConfirmFinalOrderActivity.this, "order placed", Toast.LENGTH_SHORT).show();
-                                        String phone = phoneEdittxt.getText().toString();
-                                        SendSmsToCustomer(phone,totalAmount,nameEdittxt.getText().toString());
+                                        String email = emailEdittxt.getText().toString();
+                                        SendSmsToCustomer(email,totalAmount,nameEdittxt.getText().toString());
                                         SendSmsToRetailer(nameEdittxt.getText().toString());
-                                        Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
+                                        //Intent intent = new Intent(getApplicationContext(), PlacedActivity.class);
+                                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        //startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -160,36 +172,60 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot postsnapshot:snapshot.getChildren())
                 {
-                    String retailername=postsnapshot.child("retailername").getValue().toString();
+                   String retailername = null;
+                    try {
+                        retailername=postsnapshot.child("retailername").getValue().toString();
+                    }catch (NullPointerException e){}
+
+                    if(retailername==null){
+                        retailername=postsnapshot.child("wholesalername").getValue().toString();
+                    }
                     String pname=postsnapshot.child("pname").getValue().toString();
                     String price=postsnapshot.child("price").getValue().toString();
                     String quantity=postsnapshot.child("quantity").getValue().toString();
                     System.out.println("retailer name:"+retailername);
 
                     DatabaseReference phoneref=FirebaseDatabase.getInstance().getReference("Accounts");
+                    String finalRetailername = retailername;
                     phoneref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            try {
-                                String phone=snapshot.child(retailername).child("phone").getValue().toString();
-                                System.out.println(retailername+":"+phone);
-                                Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
-                                PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                                SmsManager sms = SmsManager.getDefault();
-                                int q=Integer.valueOf(quantity);
-                                int p=Integer.valueOf(price);
-                                int totalprice=q*p;
-                                sms.sendTextMessage("+91"+phone, null,
-                                        "Greetings from Krazy Kart!!!" +
-                                                "\nHello "+retailername +
-                                                "\n You got an order from:"+name+
-                                                "\nItem:"+pname+
-                                                "\nQuantity:"+quantity+
-                                                "\nPrice:"+price+
-                                                 "\nTotal Amount:"+totalprice, pi, null);
-                            }catch (NullPointerException e)
-                            {
-
+                            String email=snapshot.child(finalRetailername).child("email").getValue().toString();
+                            final String username="krazykartoops@gmail.com";
+                            final String password="vamsithope";
+                            int q=Integer.valueOf(quantity);
+                            int p=Integer.valueOf(price);
+                            int totalprice=q*p;
+                            String messageToSend="Greetings from Krazy Kart!!!" +
+                                    "\nHello "+ finalRetailername +
+                                    "\n You got an order from:"+name+
+                                    "\nItem:"+pname+
+                                    "\nQuantity:"+quantity+
+                                    "\nPrice:"+price+
+                                    "\nTotal Amount:"+totalprice;
+                            Properties props= new Properties();
+                            props.put("mail.smtp.auth","true");
+                            props.put("mail.smtp.starttls.enable","true");
+                            props.put("mail.smtp.host","smtp.gmail.com");
+                            props.put("mail.smtp.port","587");
+                            Session session= Session.getInstance(props,
+                                    new javax.mail.Authenticator(){
+                                        @Override
+                                        protected  PasswordAuthentication getPasswordAuthentication(){
+                                            return new PasswordAuthentication(username,password);
+                                        }
+                                    });
+                            try{
+                                Message message= new MimeMessage(session);
+                                message.setFrom(new InternetAddress(username));
+                                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+                                message.setSubject("Message from Krazy Kart");
+                                message.setText(messageToSend);
+                                Transport.send(message);
+                               // Toast.makeText(MainActivity.this, "sent mail", Toast.LENGTH_SHORT).show();
+                            }
+                            catch (MessagingException e){
+                                throw new RuntimeException(e);
                             }
 
                         }
@@ -208,23 +244,60 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
 
             }
         });
+        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
 
 
     }
 
-    private void SendSmsToCustomer(String phone,String totalAmount,String name)
+    private void SendSmsToCustomer(String email,String totalAmount,String name)
     {
-        Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage("+91"+phone, null,
-                "Your order is placed successfully in Krazy Kart!!" +
-                         "\nHello "+name+
-                         "\nYour order total amount is:"+totalAmount+
-                         "\nCurrent status:Not shipped" +
-                         "\nThanks for using Krazy kart", pi, null);
+        final String username="krazykartoops@gmail.com";
+        final String password="vamsithope";
+        String messageToSend="Your order is placed successfully in Krazy Kart!!" +
+                "\nHello "+name+
+                "\nYour order total amount is:"+totalAmount+
+                "\nCurrent status:Not shipped" +
+                "\nThanks for using Krazy kart";
+        Properties props= new Properties();
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.smtp.host","smtp.gmail.com");
+        props.put("mail.smtp.port","587");
+        Session session= Session.getInstance(props,
+                new javax.mail.Authenticator(){
+                    @Override
+                    protected  PasswordAuthentication getPasswordAuthentication(){
+                        return new PasswordAuthentication(username,password);
+                    }
+                });
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    Message message= new MimeMessage(session);
+                    message.setFrom(new InternetAddress(username));
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+                    message.setSubject("Message from Krazy Kart");
+                    message.setText(messageToSend);
+                    Transport.send(message);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+
+
+
+
     }
+
 
 
 

@@ -8,6 +8,18 @@
     tools:context=".retailer.RetailerHomeActivity">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retailer"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+
+        />
+
+    <TextView
         android:id="@+id/retailer_add_new"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -110,7 +122,7 @@
         android:id="@+id/maintain_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/retailer_logout"
+        android:layout_above="@+id/retailer_layout3"
         android:layout_margin="20dp"
         android:text="Maintain products"
         android:textSize="20sp"
@@ -129,18 +141,39 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         />
-    <Button
-        android:id="@+id/retailer_logout"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/retailer_layout3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="20dp"
-        android:text="Logout"
+        android:orientation="horizontal"
         android:layout_above="@id/check_order_btn"
-        android:textSize="20sp"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        />
+        >
+        <Button
+            android:id="@+id/retailer_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:text="Logout"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            />
+        <Button
+            android:id="@+id/retailer_products"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="100dp"
+            android:text="Products"
+            android:layout_above="@id/check_order_btn"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            />
+
+
+    </LinearLayout>
 
 
 </RelativeLayout>

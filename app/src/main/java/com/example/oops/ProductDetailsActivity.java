@@ -15,6 +15,7 @@ import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.customer.CartActivity;
 import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Products;
+import com.example.oops.retailer.RetailerProductsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -84,14 +85,33 @@ public class ProductDetailsActivity extends AppCompatActivity {
         SimpleDateFormat currentTime= new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime=currentDate.format(calForDate.getTime());
         final DatabaseReference cartListRef=FirebaseDatabase.getInstance().getReference().child("Cart List");
-        final DatabaseReference productRef=FirebaseDatabase.getInstance().getReference("Products");
+
+
+        String type="";
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        if(bundle!=null)
+            try {
+                type=getIntent().getExtras().get("type").toString();
+            }catch (NullPointerException e){}
+        DatabaseReference productRef = null;
+        if(!type.equals("retailer"))
+        {
+            productRef=FirebaseDatabase.getInstance().getReference("Products");
+        }
+        else
+        {
+            productRef=FirebaseDatabase.getInstance().getReference("Wholesaler Products");
+        }
+
+
         productRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try{retailername=snapshot.child(productID).child("retailername").getValue().toString();}
                 catch (NullPointerException e)
                 {
-                    Toast.makeText(ProductDetailsActivity.this, "theres no retailer for this product", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ProductDetailsActivity.this, "theres no retailer for this product", Toast.LENGTH_SHORT).show();
                 }
 
                 System.out.println(retailername);
@@ -117,7 +137,18 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     Toast.makeText(ProductDetailsActivity.this, "Added to cart", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(getApplicationContext(), CustomerHomeActivity.class);
+                                                    Intent intent;
+                                                    String type1="";
+                                                    Intent intent1=getIntent();
+                                                    Bundle bundle=intent1.getExtras();
+                                                    if(bundle!=null)
+                                                        try {
+                                                            type1=getIntent().getExtras().get("type").toString();
+                                                        }catch (NullPointerException e){}
+                                                    if(!type1.equals("retailer"))
+                                                         intent=new Intent(getApplicationContext(),CustomerHomeActivity.class);
+                                                    else
+                                                     intent = new Intent(getApplicationContext(), RetailerProductsActivity.class);
                                                     startActivity(intent);
 
                                                 }
@@ -138,7 +169,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void getProductDetails(String productID)
     {
-        DatabaseReference productsRef= FirebaseDatabase.getInstance().getReference().child("Products");
+        System.out.println(productID);
+        String type="";
+        try{
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        if(bundle!=null)
+            type=getIntent().getExtras().get("type").toString();
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println(e);
+        }
+        DatabaseReference productsRef;
+        if(type.equals("retailer"))
+        {
+            productsRef= FirebaseDatabase.getInstance().getReference().child("Wholesaler Products");
+        }
+        else
+        {
+            productsRef= FirebaseDatabase.getInstance().getReference().child("Products");
+        }
         productsRef.child(productID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
+import com.example.oops.wholesaler.WholesalerHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +32,7 @@ public class RetailerMaintainActivity extends AppCompatActivity {
     private EditText name,price,desc;
     private ImageView imageView;
     private String productID="",stock;
+    private String type="1";
     private CheckBox stkbx;
     private DatabaseReference productsRef;
 
@@ -47,8 +49,19 @@ public class RetailerMaintainActivity extends AppCompatActivity {
         imageView=findViewById(R.id.maintain_product_image);
         deletebtn=findViewById(R.id.delete_product_btn);
         productID=getIntent().getStringExtra("pid");
-        productsRef= FirebaseDatabase.getInstance().getReference().child("Products")
-                .child(productID);
+
+        try {
+            type=getIntent().getStringExtra("type");
+            if(type.equals("retailer"))
+            {   System.out.println(type);
+                productsRef=FirebaseDatabase.getInstance().getReference("Wholesaler Products").child(productID);
+            }
+            else
+            {
+                productsRef=FirebaseDatabase.getInstance().getReference("Products").child(productID);
+            }
+
+        }catch (NullPointerException e){productsRef=FirebaseDatabase.getInstance().getReference("Products").child(productID);}
         
         displayProductInfo();
 
@@ -75,9 +88,9 @@ public class RetailerMaintainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(RetailerMaintainActivity.this, "Deleted....Reduced to ashes", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+//                Intent intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
                 finish();
             }
         });
@@ -123,7 +136,21 @@ public class RetailerMaintainActivity extends AppCompatActivity {
                  if(task.isSuccessful())
                  {
                      Toast.makeText(RetailerMaintainActivity.this, "applied changes successfully", Toast.LENGTH_SHORT).show();
-                 Intent intent= new Intent(getApplicationContext(),RetailerHomeActivity.class);
+                 String type=getIntent().getStringExtra("type");
+                 Intent intent=null;
+                     try {
+                         if(type.equals("retailer"))
+                         {   System.out.println(type);
+                         intent=new Intent(getApplicationContext(),WholesalerHomeActivity.class);
+
+                         }
+                         else
+                         {
+                             intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);
+
+                         }
+
+                     }catch (NullPointerException e){intent=new Intent(getApplicationContext(),RetailerHomeActivity.class);}
                  startActivity(intent);
                  finish();
                  }

@@ -152,132 +152,67 @@ public class CustomerHomeActivity extends AppCompatActivity
              protected void onStart() {
                  super.onStart();
                  //FirebaseRecyclerOptions<Products> options;
-                 if(!type.equals("Admin")) {
-                        DatabaseReference retlocref= (DatabaseReference) FirebaseDatabase.getInstance().getReference("Accounts");
-                        retlocref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(DataSnapshot postsnapshot:snapshot.getChildren())
-                                {
-                                    String retaitype=postsnapshot.child("type").getValue().toString();
-                                    if(retaitype.equals("Retailer"))
-                                    {
-                                        try {
-                                            String retailerlat=postsnapshot.child("latitude").getValue().toString();
-                                            String retailerlon=postsnapshot.child("longitude").getValue().toString();
-                                            String retailername=postsnapshot.child("name").getValue().toString();
-                                            System.out.println(retailername);
-                                            System.out.println("\nretlat:"+retailerlat+"\nretlon:"+retailerlon);
-                                            DatabaseReference cuslocref=(DatabaseReference) FirebaseDatabase.getInstance().getReference("Accounts").child(Prevalent.currentonlineUser.getName());
-                                            cuslocref.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    String customerlat=snapshot.child("latitude").getValue().toString();
-                                                    String customerlon=snapshot.child("longitude").getValue().toString();
-                                                    String customername=snapshot.child("name").getValue().toString();
-                                                    System.out.println(customername);
-                                                    System.out.println("\ncuslat:"+customerlat+"\ncuslon:"+customerlon);
-                                                    Double calculateDistance=CalculateDistance(retailerlat,retailerlon,customerlat,customerlon);
-                                                    System.out.println("\n"+calculateDistance+"\n");
-                                                    ProductsRef = FirebaseDatabase.getInstance().getReference("Products");
-                                                    if(calculateDistance<=50)
-                                                    {
-                                                        coun++;
-                                                        System.out.println(coun+"\n");
-                                                        FirebaseRecyclerOptions<Products> options;
-                                                        options =
-                                                                new FirebaseRecyclerOptions.Builder<Products>()
-                                                                        .setQuery(ProductsRef.orderByChild("retailername").equalTo(retailername), Products.class).build();
-                                                        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter=
-                                                                new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
-                                                                    @Override
-                                                                    protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder, int i, @NonNull Products products) {
-                                                                        productViewHolder.txtproductname.setText(products.getPname());
-                                                                        productViewHolder.txtproductdesc.setText(products.getDesc());
-                                                                        productViewHolder.txtproductprice.setText(products.getPrice());
-                                                                        productViewHolder.txtretailername.setText(products.getRetailername());
-                                                                        if(products.getStock().equals("in stock"))
-                                                                        {
-                                                                            productViewHolder.instock.setVisibility(View.VISIBLE);
-                                                                            productViewHolder.notinstock.setVisibility(View.INVISIBLE);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            productViewHolder.instock.setVisibility(View.INVISIBLE);
-                                                                            productViewHolder.notinstock.setVisibility(View.VISIBLE);
-                                                                        }
-                                                                        Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
+                 if(!type.equals("Admin"))
+                 {
+                     ProductsRef=FirebaseDatabase.getInstance().getReference().child("Products");
+                     FirebaseRecyclerOptions<Products> options=
+                             new FirebaseRecyclerOptions.Builder<Products>()
+                                     .setQuery(ProductsRef,Products.class)
+                                     .build();
+
+                     FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter=
+                             new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
+                                 @Override
+                                 protected void onBindViewHolder(@NonNull ProductViewHolder productViewHolder, int i, @NonNull Products products) {
+                                     productViewHolder.txtproductname.setText(products.getPname());
+                                     productViewHolder.txtproductdesc.setText(products.getDesc());
+                                     productViewHolder.txtproductprice.setText(products.getPrice());
+                                     productViewHolder.txtretailername.setText(products.getRetailername());
+                                     if(products.getStock().equals("in stock"))
+                                     {
+                                         productViewHolder.instock.setVisibility(View.VISIBLE);
+                                         productViewHolder.notinstock.setVisibility(View.INVISIBLE);
+                                     }
+                                     else
+                                     {
+                                         productViewHolder.instock.setVisibility(View.INVISIBLE);
+                                         productViewHolder.notinstock.setVisibility(View.VISIBLE);
+                                     }
+                                     Picasso.get().load(products.getImage()).into(productViewHolder.imageView);
+                                     productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             if(products.getStock().equals("in stock"))
+                                             {
 
 
-                                                                        productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                                            @Override
-                                                                            public void onClick(View v) {
-                                                                                if(products.getStock().equals("in stock"))
-                                                                                {
-                                                                                    if(type.equals("Admin"))
-                                                                                    {
-                                                                                        Intent intent = new Intent(getApplicationContext(), RetailerMaintainActivity.class);
-                                                                                        intent.putExtra("pid",products.getPid());
-                                                                                        startActivity(intent);
-                                                                                    }
 
-                                                                                    else
-                                                                                    {
-                                                                                        Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
-                                                                                        intent.putExtra("pid",products.getPid());
-                                                                                        startActivity(intent);
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    Toast.makeText(CustomerHomeActivity.this, "This product is currently not in stock", Toast.LENGTH_SHORT).show();
-                                                                                }
+                                                 Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                                 intent.putExtra("pid",products.getPid());
+                                                 startActivity(intent);
+
+                                             }
+                                             else
+                                             {
+                                                 Toast.makeText(CustomerHomeActivity.this, "This product is currently not in stock", Toast.LENGTH_SHORT).show();
+                                             }
 
 
-                                                                            }
-                                                                        });
+                                         }
+                                     });
 
+                                 }
 
-                                                                    }
-
-                                                                    @NonNull
-                                                                    @Override
-                                                                    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                                                        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout,parent,false);
-                                                                        ProductViewHolder holder = new ProductViewHolder(view);
-                                                                        return holder;
-                                                                    }
-                                                                };
-                                                        recyclerView.setAdapter(adapter);
-                                                        adapter.startListening();
-                                                    }
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
-
-                                        }catch (NullPointerException e)
-                                        {
-                                            //Toast.makeText(CustomerHomeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }
-
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
+                                 @NonNull
+                                 @Override
+                                 public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                     View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout,parent,false);
+                                     ProductViewHolder holder = new ProductViewHolder(view);
+                                     return holder;
+                                 }
+                             };
+                     recyclerView.setAdapter(adapter);
+                     adapter.startListening();
                  }
                  else{
                      ProductsRef=FirebaseDatabase.getInstance().getReference("Products");

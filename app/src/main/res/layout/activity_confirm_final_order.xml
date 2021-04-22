@@ -30,13 +30,13 @@
     <EditText
         android:id="@+id/shipment_phone"
         android:layout_width="match_parent"
-        android:inputType="number"
+        android:inputType="textEmailAddress"
         android:layout_height="wrap_content"
         android:layout_below="@+id/shipment_name"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:hint="Phone"
+        android:hint="Email"
         />
     <EditText
         android:id="@+id/shipment_address"

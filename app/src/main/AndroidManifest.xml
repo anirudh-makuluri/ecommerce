@@ -20,7 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Oops"
         tools:replace="android:theme">
-        <activity android:name=".customer.CustomerOrderActivity"></activity>
+        <activity android:name=".retailer.DeliveredActivity"></activity>
+        <activity android:name=".customer.PlacedActivity" />
+        <activity android:name=".retailer.RetailerProductsActivity" />
+        <activity android:name=".wholesaler.WholesalerNewOrderActivity" />
+        <activity android:name=".wholesaler.WholesalerAddCategory" />
+        <activity android:name=".customer.CustomerOrderActivity" />
         <activity android:name=".GoogleMapActivity" />
         <activity android:name=".customer.CustomerCategorySearchActivity" />
         <activity android:name=".customer.CustomerCategoryActivity" />

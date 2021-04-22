@@ -34,7 +34,6 @@ public class RetailerNewOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_retailer_new_order);
 
         ordersRef= FirebaseDatabase.getInstance().getReference().child("Orders");
-
         ordersList=findViewById(R.id.orders_list);
         ordersList.setLayoutManager(new LinearLayoutManager(this));
 

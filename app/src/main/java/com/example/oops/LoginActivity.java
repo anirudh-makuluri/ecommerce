@@ -20,6 +20,7 @@ import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.customer.CustomerHomeActivity;
 import com.example.oops.model.Users;
 import com.example.oops.retailer.RetailerHomeActivity;
+import com.example.oops.wholesaler.WholesalerHomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

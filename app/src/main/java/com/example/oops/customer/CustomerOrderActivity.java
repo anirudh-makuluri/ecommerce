@@ -58,6 +58,7 @@ public class CustomerOrderActivity extends AppCompatActivity {
                     cartViewHolder.txtProductPrice.setText("Price:"+cart.getPrice());
                     cartViewHolder.txtProductName.setText("Name:"+cart.getPname());
                     cartViewHolder.txtProductState.setText(cart.getState());
+
                     cartViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
