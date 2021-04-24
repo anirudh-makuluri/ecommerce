@@ -124,6 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         //System.out.println("In access");
         final DatabaseReference RootRef;
         RootRef= FirebaseDatabase.getInstance().getReference();
+
+        RootRef.keepSynced(true);
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -3,10 +3,18 @@ package com.example.oops;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +37,8 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.TimeZone;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     private FloatingActionButton addToCartBtn;
@@ -37,20 +47,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView productPrice,productDesc,productName;
     private String productID="",state="normal";
     private String retailername="Retailer";
+    private RatingBar productrating;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         productID=getIntent().getStringExtra("pid");
         addToCartBtn=findViewById(R.id.add_product_to_cart);
         productImage=findViewById(R.id.product_image_details);
         numberButton=findViewById(R.id.number_btn);
+        productrating=findViewById(R.id.products_rating_bar);
         productPrice=findViewById(R.id.product_price_details);
         productDesc=findViewById(R.id.product_description_details);
         productName=findViewById(R.id.product_name_details);
-
         getProductDetails(productID);
         addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,11 +93,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Calendar calForDate= Calendar.getInstance();
         SimpleDateFormat currentDate= new SimpleDateFormat("MM dd,yyyy");
         saveCurrentDate=currentDate.format(calForDate.getTime());
-
         SimpleDateFormat currentTime= new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime=currentDate.format(calForDate.getTime());
+        saveCurrentTime=currentTime.format(calForDate.getTime());
         final DatabaseReference cartListRef=FirebaseDatabase.getInstance().getReference().child("Cart List");
-
+        cartListRef.keepSynced(true);
 
         String type="";
         Intent intent=getIntent();
@@ -112,6 +123,25 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 catch (NullPointerException e)
                 {
                     //Toast.makeText(ProductDetailsActivity.this, "theres no retailer for this product", Toast.LENGTH_SHORT).show();
+                }
+                Boolean net=isNetworkAvailable();
+                if(!net)
+                {
+                    Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT)
+                            .setData(CalendarContract.Events.CONTENT_URI);
+                    insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Order from Krazy Kart"); // Simple title
+                    insertCalendarIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                    insertCalendarIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Hyderabad");
+                    insertCalendarIntent.putExtra(CalendarContract.Events.DESCRIPTION,
+                            Prevalent.currentonlineUser.getName()+" ordered:"+productName.getText().toString()+
+                            "\nprice:"+productPrice.getText().toString()+
+                            "\nquantity:"+numberButton.getNumber()+
+                            "\n at date:"+saveCurrentDate+
+                            "\n at time:"+saveCurrentTime) ;// Description
+                    insertCalendarIntent.putExtra(Intent.EXTRA_EMAIL, "anirudh.makuluri@gmail.com,durgakrishnavamsi@gmail.com");
+                    insertCalendarIntent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
+                    insertCalendarIntent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                    startActivity(insertCalendarIntent);
                 }
 
                 System.out.println(retailername);
@@ -199,6 +229,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     productName.setText(products.getPname());
                     productDesc.setText(products.getDesc());
                     productPrice.setText(products.getPrice());
+                    Random rd= new Random();
+                    productrating.setRating((rd.nextFloat())*5);
                     Picasso.get().load(products.getImage()).into(productImage);
                 }
             }
@@ -239,4 +271,18 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Network is present and connected
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+
 }

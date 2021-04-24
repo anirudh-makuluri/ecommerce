@@ -29,6 +29,6 @@
         <item
             android:id="@+id/nav_feedback"
             android:icon="@drawable/feedback"
-            android:title="Feedback" />
+            android:title="Queries" />
     </group>
 </menu>

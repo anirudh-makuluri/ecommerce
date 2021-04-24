@@ -3,7 +3,10 @@ package com.example.oops;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,17 +60,37 @@ public class otppage extends AppCompatActivity {
         submitbtn=findViewById(R.id.otppage_emer_submit);
         otpuser=findViewById(R.id.otp_typeuser);
         emergency=findViewById(R.id.emergency);
+        Boolean net=isNetworkAvailable();
+        if(!net)
+        {
+            Toast.makeText(this, "Looks like you are in offline mode", Toast.LENGTH_SHORT).show();
+            otpinput.setVisibility(View.INVISIBLE);
+            login.setVisibility(View.INVISIBLE);
+            //otpuser.setVisibility(View.VISIBLE);
+            submitbtn.setVisibility(View.VISIBLE);
+        }
         emergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(otppage.this, "But do this", Toast.LENGTH_SHORT).show();
-                otpuser.setVisibility(View.VISIBLE);
+                //Toast.makeText(otppage.this, "So do this", Toast.LENGTH_SHORT).show();
+               // otpuser.setVisibility(View.VISIBLE);
                 submitbtn.setVisibility(View.VISIBLE);
-                submitbtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String typeuser=otpuser.getText().toString();
+            }
+        });
 
+        submitbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name=getIntent().getStringExtra("name");
+                DatabaseReference RootRef;
+                RootRef= FirebaseDatabase.getInstance().getReference();
+                RootRef.keepSynced(true);
+                RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users usersdata=snapshot.child("Accounts").child(name).getValue(Users.class);
+                        String typeuser=usersdata.getType();
+                        String nextLoc;
                         if(typeuser.equals("Wholesaler"))
                         {
                             Intent intent = new Intent(getApplicationContext(), WholesalerHomeActivity.class
@@ -96,8 +119,15 @@ public class otppage extends AppCompatActivity {
                         {
                             Toast.makeText(otppage.this, "some error occured", Toast.LENGTH_SHORT).show();
                         }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
+
             }
         });
 
@@ -241,4 +271,17 @@ public class otppage extends AppCompatActivity {
                     }
                 });
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Network is present and connected
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
+
 }

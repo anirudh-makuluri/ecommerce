@@ -99,7 +99,7 @@ public class RetailerProductsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!type.equals("Admin"))
                 {
-                    Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), RetCartActivity.class);
                     startActivity(intent);
                 }
             }
@@ -166,7 +166,7 @@ public class RetailerProductsActivity extends AppCompatActivity {
                                     if(products.getStock().equals("in stock"))
                                     {
 
-                                        Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), RetProductDetailsActivity.class);
                                         intent.putExtra("pid",products.getPid());
                                         intent.putExtra("type","retailer");
                                         startActivity(intent);
@@ -200,7 +200,7 @@ public class RetailerProductsActivity extends AppCompatActivity {
             FirebaseRecyclerOptions<Products> options;
             options =
                     new FirebaseRecyclerOptions.Builder<Products>()
-                            .setQuery(ProductsRef.orderByChild("wholesalername").startAt(Prevalent.currentonlineUser.getName()).endAt(Prevalent.currentonlineUser.getName()), Products.class).build();
+                            .setQuery(ProductsRef.orderByChild("retailername").startAt(Prevalent.currentonlineUser.getName()).endAt(Prevalent.currentonlineUser.getName()), Products.class).build();
             FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter=
                     new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
                         @Override

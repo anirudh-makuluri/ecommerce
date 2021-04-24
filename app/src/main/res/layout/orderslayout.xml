@@ -24,7 +24,7 @@
             android:textAlignment="viewEnd"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="5dp"
-            android:text="Phone number"
+            android:text="phone:8121484108"
             android:textStyle="bold"
             android:textSize="14sp"
             />

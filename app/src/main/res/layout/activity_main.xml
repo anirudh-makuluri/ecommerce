@@ -46,6 +46,8 @@
         android:textSize="20sp"
         android:visibility="invisible" />
 
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/google_sign_in"
         android:layout_width="match_parent"

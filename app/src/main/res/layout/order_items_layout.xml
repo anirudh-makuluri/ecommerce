@@ -40,16 +40,24 @@
             android:layout_below="@+id/cart_product_quantity"
             android:gravity="center"
             />
-        <TextView
-            android:id="@+id/cart_product_status"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="60dp">
+            <TextView
+            android:id="@+id/cart_product_status"
+            android:layout_width="280dp"
+                android:paddingLeft="130dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+                android:gravity="center"
             android:text="State"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            />
+            android:textStyle="bold" />
+
+        </LinearLayout>
 
 
     </RelativeLayout>

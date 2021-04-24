@@ -1,7 +1,6 @@
 package com.example.oops.customer.ViewHolder;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,18 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.oops.Interface.ItemClickListener;
 import com.example.oops.R;
 
-public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView txtProductName,txtProductPrice,txtProductQuantity,hello;
+public class QueryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    public TextView txtname,txtquery;
     private ItemClickListener itemClickListener;
 
-    public CartViewHolder(@NonNull View itemView) {
+    public QueryViewHolder(@NonNull View itemView) {
         super(itemView);
-        txtProductName=itemView.findViewById(R.id.cart_product_name);
-        txtProductPrice=itemView.findViewById(R.id.cart_product_price);
-        txtProductQuantity=itemView.findViewById(R.id.cart_product_quantity);
+        txtname=itemView.findViewById(R.id.query_name);
+        txtquery=itemView.findViewById(R.id.query_text);
+
     }
-
-
 
     @Override
     public void onClick(View v) {

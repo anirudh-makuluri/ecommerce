@@ -76,8 +76,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        Boolean i=true;
+        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
+        if (mDatabase == null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            database.setPersistenceEnabled(true);
+            mDatabase = database.getReference();
+            // ...
+        }
+
         mAuth = FirebaseAuth.getInstance();
         Paper.init(this);
         createrequest();
@@ -91,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
+
+
         facebookbutton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

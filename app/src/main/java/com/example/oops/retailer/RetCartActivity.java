@@ -1,4 +1,4 @@
-package com.example.oops.customer;
+package com.example.oops.retailer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -16,11 +16,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.oops.ProductDetailsActivity;
-import com.example.oops.model.Cart;
 import com.example.oops.Prevalent.Prevalent;
+import com.example.oops.ProductDetailsActivity;
 import com.example.oops.R;
+import com.example.oops.customer.CartActivity;
+import com.example.oops.customer.ConfirmFinalOrderActivity;
 import com.example.oops.customer.ViewHolder.CartViewHolder;
+import com.example.oops.model.Cart;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,8 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CartActivity extends AppCompatActivity {
-
+public class RetCartActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private Button nextProcessBtn;
@@ -42,23 +43,23 @@ public class CartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cart);
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        recyclerView=findViewById(R.id.cart_list);
+        setContentView(R.layout.activity_ret_cart);
+        recyclerView=findViewById(R.id.retailer_cart_list);
         recyclerView.setHasFixedSize(true);
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        nextProcessBtn=findViewById(R.id.next_process_btn);
+        nextProcessBtn=findViewById(R.id.retailer_next_process_btn);
         txtmsg1=findViewById(R.id.msg1);
-        txtTotalAmount=findViewById(R.id.total_price);
+        txtTotalAmount=findViewById(R.id.retailer_total_price);
         System.out.println("in oncreate"+overalltotalprice);
         txtTotalAmount.setText("Total price:"+overalltotalprice);
+
         nextProcessBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("In onclick"+overalltotalprice);
                 txtTotalAmount.setText("Total price:"+overalltotalprice);
-                Intent intent = new Intent(getApplicationContext(),ConfirmFinalOrderActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RetConfirmFinalOrderActivity.class);
                 intent.putExtra("Total Price",String.valueOf(overalltotalprice));
                 startActivity(intent);
                 finish();
@@ -75,7 +76,7 @@ public class CartActivity extends AppCompatActivity {
         final DatabaseReference cartListRef= FirebaseDatabase.getInstance().getReference().child("Cart List");
         FirebaseRecyclerOptions<Cart> options=
                 new FirebaseRecyclerOptions.Builder<Cart>()
-                .setQuery(cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products"),Cart.class)
+                        .setQuery(cartListRef.child("User View").child(Prevalent.currentonlineUser.getName()).child("Products"),Cart.class)
                         .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter
@@ -96,37 +97,37 @@ public class CartActivity extends AppCompatActivity {
                                         "Remove"
 
                                 };
-                        AlertDialog.Builder builder= new AlertDialog.Builder(CartActivity.this);
+                        AlertDialog.Builder builder= new AlertDialog.Builder(RetCartActivity.this);
                         builder.setTitle("Cart Options:");
                         builder.setItems(options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                 if(which==0)
-                                 {
-                                     Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
+                                if(which==0)
+                                {
+                                    Intent intent = new Intent(RetCartActivity.this, RetProductDetailsActivity.class);
                                     intent.putExtra("pid",cart.getPid());
                                     startActivity(intent);
-                                 }
-                                 if(which==1)
-                                 {
+                                }
+                                if(which==1)
+                                {
                                     cartListRef.child("User View")
-                                    .child(Prevalent.currentonlineUser.getName())
-                                    .child("Products")
-                                    .child(cart.getPid())
-                                    .removeValue()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful())
-                                            {
-                                                Toast.makeText(CartActivity.this, "item deleted", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(CartActivity.this, CartActivity.class);
-                                                startActivity(intent);
-                                            }
+                                            .child(Prevalent.currentonlineUser.getName())
+                                            .child("Products")
+                                            .child(cart.getPid())
+                                            .removeValue()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful())
+                                                    {
+                                                        Toast.makeText(RetCartActivity.this, "item deleted", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(RetCartActivity.this, RetCartActivity.class);
+                                                        startActivity(intent);
+                                                    }
 
-                                        }
-                                    }) ;
-                                 }
+                                                }
+                                            }) ;
+                                }
                             }
                         });
                         builder.show();
@@ -150,6 +151,8 @@ public class CartActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
+
+
     private void CheckOrderState()
     {
         DatabaseReference orderRef;
@@ -167,7 +170,7 @@ public class CartActivity extends AppCompatActivity {
                         recyclerView.setVisibility(View.GONE);
                         txtmsg1.setVisibility(View.VISIBLE);
                         nextProcessBtn.setVisibility(View.GONE);
-                        Toast.makeText(CartActivity.this, "purchase more once you have received your previous order", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RetCartActivity.this, "purchase more once you have received your previous order", Toast.LENGTH_SHORT).show();
                     }
                     else if(shippingstate.equals("shipped"))
                     {
@@ -175,7 +178,7 @@ public class CartActivity extends AppCompatActivity {
                         recyclerView.setVisibility(View.GONE);
                         txtmsg1.setVisibility(View.VISIBLE);
                         nextProcessBtn.setVisibility(View.GONE);
-                        Toast.makeText(CartActivity.this, "purchase more once you have received your previous order", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RetCartActivity.this, "purchase more once you have received your previous order", Toast.LENGTH_SHORT).show();
                     }
                 }
 

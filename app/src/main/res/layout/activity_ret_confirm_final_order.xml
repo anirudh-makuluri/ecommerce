@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".customer.ConfirmFinalOrderActivity">
+    tools:context=".retailer.RetConfirmFinalOrderActivity">
 
     <TextView
-        android:id="@+id/txt"
+        android:id="@+id/retailer_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter Shipment Details"
@@ -18,59 +18,59 @@
         android:textStyle="bold"
         />
     <EditText
-        android:id="@+id/shipment_name"
+        android:id="@+id/retailer_shipment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt"
+        android:layout_below="@+id/retailer_txt"
         android:layout_marginTop="60dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:hint="Name"
         />
     <EditText
-        android:id="@+id/shipment_phone"
+        android:id="@+id/retailer_shipment_phone"
         android:layout_width="match_parent"
         android:inputType="textEmailAddress"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shipment_name"
+        android:layout_below="@+id/retailer_shipment_name"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:hint="Email"
         />
     <EditText
-        android:id="@+id/shipment_address"
+        android:id="@+id/retailer_shipment_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shipment_phone"
+        android:layout_below="@+id/retailer_shipment_phone"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:hint="Address"
         />
     <EditText
-        android:id="@+id/shipment_city"
+        android:id="@+id/retailer_shipment_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shipment_address"
+        android:layout_below="@+id/retailer_shipment_address"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:hint="City"
         />
     <EditText
-        android:id="@+id/ship_phone"
+        android:id="@+id/retailer_ship_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shipment_city"
+        android:layout_below="@+id/retailer_shipment_city"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:hint="Phone"
         />
     <CheckBox
-        android:id="@+id/cod_chkbox"
-        android:layout_above="@+id/confirm_final_order_btn"
+        android:id="@+id/retailer_cod_chkbox"
+        android:layout_above="@+id/retailer_confirm_final_order_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
@@ -78,13 +78,12 @@
         android:textColor="@color/black"
         android:text="Cash On Delivery"/>
     <Button
-        android:id="@+id/confirm_final_order_btn"
+        android:id="@+id/retailer_confirm_final_order_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         android:text="Confirm"
         />
-
 
 </RelativeLayout>

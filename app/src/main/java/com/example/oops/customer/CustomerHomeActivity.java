@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.ProductDetailsActivity;
+import com.example.oops.QueriesActivity;
 import com.example.oops.R;
 import com.example.oops.RegisterActivity;
 import com.example.oops.customer.ViewHolder.ProductViewHolder;
@@ -391,6 +392,17 @@ public class CustomerHomeActivity extends AppCompatActivity
                      if(!type.equals("Admin"))
                      {
                          Intent intent = new Intent(getApplicationContext(),CustomerOrderActivity.class);
+                         //intent.putExtra("type","cus");
+                         startActivity(intent);
+                     }
+
+                 }
+
+                 else if(id==R.id.nav_feedback)
+                 {
+                     if(!type.equals("Admin"))
+                     {
+                         Intent intent = new Intent(getApplicationContext(), QueriesActivity.class);
                          startActivity(intent);
                      }
 

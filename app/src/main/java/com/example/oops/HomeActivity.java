@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -77,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         LocationButton=findViewById(R.id.register_location_btn);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         GoogleSignInAccount googleSignInAccount= GoogleSignIn.getLastSignedInAccount(this);
+
         DatabaseReference rootref=FirebaseDatabase.getInstance().getReference("Accounts");
         rootref.addValueEventListener(new ValueEventListener() {
             @Override

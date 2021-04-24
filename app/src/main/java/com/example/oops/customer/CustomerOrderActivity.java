@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.oops.FeedbackActivity;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
 import com.example.oops.customer.ViewHolder.CartViewHolder;
@@ -58,7 +60,40 @@ public class CustomerOrderActivity extends AppCompatActivity {
                     cartViewHolder.txtProductPrice.setText("Price:"+cart.getPrice());
                     cartViewHolder.txtProductName.setText("Name:"+cart.getPname());
                     cartViewHolder.txtProductState.setText(cart.getState());
+                    if(cart.getState().equals("Delivered"))
+                    {
+                        cartViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CharSequence options[]=new CharSequence[]
+                                        {
+                                                "Yes",
+                                                "No"
 
+                                        };
+                                AlertDialog.Builder builder=new AlertDialog.Builder(CustomerOrderActivity.this);
+                                builder.setTitle("Do you want to give feedback for this product?");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(which==0)
+                                        {
+                                            Intent intent= new Intent(getApplicationContext(), FeedbackActivity.class);
+                                            String r=getRef(i).getKey();
+                                            intent.putExtra("ref",cart.getPname());
+                                            startActivity(intent);
+
+                                        }
+
+
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+
+                    }
+                    else{
                     cartViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -86,7 +121,7 @@ public class CustomerOrderActivity extends AppCompatActivity {
                             });
                             builder.show();
                         }
-                    });
+                    });}
 
                 }
 

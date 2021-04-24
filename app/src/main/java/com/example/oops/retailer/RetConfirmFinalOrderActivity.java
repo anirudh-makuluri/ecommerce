@@ -1,30 +1,21 @@
-package com.example.oops.customer;
+package com.example.oops.retailer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.NetworkOnMainThreadException;
 import android.os.StrictMode;
-import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.oops.MainActivity;
 import com.example.oops.Prevalent.Prevalent;
 import com.example.oops.R;
+import com.example.oops.customer.ConfirmFinalOrderActivity;
 import com.example.oops.model.Users;
-import com.example.oops.retailer.RetailerHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +37,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class ConfirmFinalOrderActivity extends AppCompatActivity {
+public class RetConfirmFinalOrderActivity extends AppCompatActivity {
     private EditText nameEdittxt, emailEdittxt, addressEdittxt, cityEdittxt,phoneEdittxt;
     private Button confirmorderbtn;
     private String totalAmount = "";
@@ -55,13 +46,13 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirm_final_order);
-        confirmorderbtn = findViewById(R.id.confirm_final_order_btn);
-        nameEdittxt = findViewById(R.id.shipment_name);
-        emailEdittxt = findViewById(R.id.shipment_phone);
-        phoneEdittxt=findViewById(R.id.ship_phone);
-        addressEdittxt = findViewById(R.id.shipment_address);
-        cityEdittxt = findViewById(R.id.shipment_city);
+        setContentView(R.layout.activity_ret_confirm_final_order);
+        confirmorderbtn = findViewById(R.id.retailer_confirm_final_order_btn);
+        nameEdittxt = findViewById(R.id.retailer_shipment_name);
+        emailEdittxt = findViewById(R.id.retailer_shipment_phone);
+        phoneEdittxt=findViewById(R.id.retailer_ship_phone);
+        addressEdittxt = findViewById(R.id.retailer_shipment_address);
+        cityEdittxt = findViewById(R.id.retailer_shipment_city);
         totalAmount = getIntent().getStringExtra("Total Price");
         Toast.makeText(this, totalAmount, Toast.LENGTH_SHORT).show();
         confirmorderbtn.setOnClickListener(new View.OnClickListener() {
@@ -72,9 +63,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         });
 
         FillText();
-
     }
-
     private void FillText() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Accounts").child(Prevalent.currentonlineUser.getName());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -82,8 +71,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users usersdata = snapshot.getValue(Users.class);
                 String name = usersdata.getName();
-                String email = usersdata.getEmail();
                 String phone=usersdata.getPhone();
+                String email = usersdata.getEmail();
                 String address = usersdata.getAddress();
                 String city = usersdata.getCity();
                 nameEdittxt.setText(name);
@@ -120,6 +109,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("MM dd,yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
+
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
@@ -131,8 +121,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
         ordersMap.put("name", nameEdittxt.getText().toString());
         ordersMap.put("email", emailEdittxt.getText().toString());
         ordersMap.put("date", saveCurrentDate);
+        ordersMap.put("phone",phoneEdittxt.getText().toString());
         ordersMap.put("time", saveCurrentTime);
-        ordersMap.put("phone", phoneEdittxt.getText().toString());
         ordersMap.put("address", addressEdittxt.getText().toString());
         ordersMap.put("city", cityEdittxt.getText().toString());
         ordersMap.put("state", "not shipped");
@@ -150,13 +140,13 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(ConfirmFinalOrderActivity.this, "order placed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RetConfirmFinalOrderActivity.this, "order placed", Toast.LENGTH_SHORT).show();
                                         String email = emailEdittxt.getText().toString();
                                         SendSmsToCustomer(email,totalAmount,nameEdittxt.getText().toString());
                                         SendSmsToRetailer(nameEdittxt.getText().toString());
-                                        //Intent intent = new Intent(getApplicationContext(), PlacedActivity.class);
-                                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        //startActivity(intent);
+                                        Intent intent = new Intent(getApplicationContext(), RetailerHomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -175,14 +165,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot postsnapshot:snapshot.getChildren())
                 {
-                   String retailername = null;
-                    try {
-                        retailername=postsnapshot.child("retailername").getValue().toString();
-                    }catch (NullPointerException e){}
-
-                    if(retailername==null){
-                        retailername=postsnapshot.child("wholesalername").getValue().toString();
-                    }
+                    String retailername=postsnapshot.child("retailername").getValue().toString();
                     String pname=postsnapshot.child("pname").getValue().toString();
                     String price=postsnapshot.child("price").getValue().toString();
                     String quantity=postsnapshot.child("quantity").getValue().toString();
@@ -214,7 +197,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                             Session session= Session.getInstance(props,
                                     new javax.mail.Authenticator(){
                                         @Override
-                                        protected  PasswordAuthentication getPasswordAuthentication(){
+                                        protected PasswordAuthentication getPasswordAuthentication(){
                                             return new PasswordAuthentication(username,password);
                                         }
                                     });
@@ -225,7 +208,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
                                 message.setSubject("Message from Krazy Kart");
                                 message.setText(messageToSend);
                                 Transport.send(message);
-                               // Toast.makeText(MainActivity.this, "sent mail", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(MainActivity.this, "sent mail", Toast.LENGTH_SHORT).show();
                             }
                             catch (MessagingException e){
                                 throw new RuntimeException(e);
@@ -253,6 +236,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
 
 
     }
+
+
 
     private void SendSmsToCustomer(String email,String totalAmount,String name)
     {
@@ -300,9 +285,4 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
 }
