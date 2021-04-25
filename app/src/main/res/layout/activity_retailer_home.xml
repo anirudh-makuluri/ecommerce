@@ -16,7 +16,6 @@
         android:textColor="@color/black"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
-
         />
 
     <TextView
@@ -160,11 +159,20 @@
             android:textColor="@color/black"
             />
         <Button
+            android:id="@+id/retailer_query"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Queries"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:layout_marginLeft="15dp"
+            />
+        <Button
             android:id="@+id/retailer_products"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="20dp"
             android:text="Products"
             android:layout_above="@id/check_order_btn"
             android:textSize="20sp"

@@ -250,6 +250,7 @@ public class CustomerHomeActivity extends AppCompatActivity
                                                  {
                                                      Intent intent = new Intent(getApplicationContext(), RetailerMaintainActivity.class);
                                                      intent.putExtra("pid",products.getPid());
+                                                     intent.putExtra("type","customer");
                                                      startActivity(intent);
                                                  }
 

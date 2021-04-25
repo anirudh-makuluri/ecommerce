@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.oops.MainActivity;
+import com.example.oops.QueriesActivity;
 import com.example.oops.R;
 import com.example.oops.customer.CustomerHomeActivity;
 import com.facebook.AccessToken;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RetailerHomeActivity extends AppCompatActivity {
     private ImageView milk,vegetables,fruits,dairy,beverages,breakfast,foodgrams,readymade;
-    private Button logoutbtn,checkorderbtn,maintainproductsbtn,productsbtn;
+    private Button logoutbtn,checkorderbtn,maintainproductsbtn,productsbtn,querybtn;
     private AccessTokenTracker accessTokenTracker;
     private FirebaseAuth mFirebaseAuth;
 
@@ -34,10 +35,18 @@ public class RetailerHomeActivity extends AppCompatActivity {
         breakfast=findViewById(R.id.breakfast);
         foodgrams=findViewById(R.id.foodgrams);
         readymade=findViewById(R.id.readymade);
+        querybtn=findViewById(R.id.retailer_query);
         logoutbtn=findViewById(R.id.retailer_logout);
         checkorderbtn=findViewById(R.id.check_order_btn);
         maintainproductsbtn=findViewById(R.id.maintain_btn);
         productsbtn=findViewById(R.id.retailer_products);
+        querybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getApplicationContext(), QueriesActivity.class);
+                startActivity(intent);
+            }
+        });
         productsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -151,6 +151,7 @@
         android:layout_above="@id/wholesaler_check_order_btn"
         android:textSize="20sp"
         android:textAllCaps="false"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         />
 
