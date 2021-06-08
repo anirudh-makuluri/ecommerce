@@ -137,8 +137,15 @@ public class CustomerHomeActivity extends AppCompatActivity
 
         if(!type.equals("Admin"))
         {
-            userNameTextView.setText(Prevalent.currentonlineUser.getName());
-            Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+            try{
+                userNameTextView.setText(Prevalent.currentonlineUser.getName());
+                Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+            }catch (NullPointerException e)
+            {
+                userNameTextView.setText("Username");
+                Picasso.get().load(Prevalent.currentonlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+            }
+
         }
         recyclerView = findViewById(R.id.recycler_menu);
         recyclerView.setHasFixedSize(true);
